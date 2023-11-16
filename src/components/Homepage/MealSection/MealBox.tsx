@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { motion, useAnimate } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { Meal } from "@/models/Meal";
 import { useWindowDimension } from "@/hooks/dimension";
@@ -16,7 +16,6 @@ interface Props {
 const MealBox: React.FC<Props> = ({ meal: { name, image, id }, index }) => {
   const { width } = useWindowDimension();
   const router = useRouter();
-  const [scope, animate] = useAnimate<HTMLDivElement>();
 
   const isMobile = useMemo(() => width < 500, [width]);
 
@@ -24,31 +23,18 @@ const MealBox: React.FC<Props> = ({ meal: { name, image, id }, index }) => {
     router.push(`/menu?${id}`);
   };
 
-  const showTheCard = () => {
-    if (isMobile) {
-      animate(`#meal-${id}`, {
-        scale: 1.15,
-        position: "absolute",
-        left: width / 4 + index * 75,
-        top: "50px",
-        width: "200px",
-        zIndex: 50,
-        boxShadow: "0px 0px 10px black",
-        backgroundColor: "rgb(212, 142, 93)",
-      });
-    }
-  };
-
   return (
-    <div
-      ref={scope}
-      onContextMenu={(event) => {
-        event.preventDefault();
-      }}
-    >
       <motion.div
         id={`meal-${id}`}
         onClick={goToSpecificMenu}
+        onTouchStart={(event) => {
+          try{
+          event.preventDefault();
+          } catch {
+
+          }
+        }}
+        onContextMenu={(event) => event.preventDefault()}
         whileHover={
           isMobile
             ? {
@@ -76,20 +62,20 @@ const MealBox: React.FC<Props> = ({ meal: { name, image, id }, index }) => {
         }
         transition={isMobile ? { delay: 0.2 } : { stiffness: 100 }}
         initial={{ x: -index * 75 }}
-        className="p-3 shadow-shadowLeft rounded-md bg-gradient-to-r from-[rgb(212,142,93)] to-[rgba(212,143,93,0.14)] text-center"
+        className="touch-auto p-3 shadow-shadowLeft rounded-md bg-gradient-to-r from-[rgb(212,142,93)] to-[rgba(212,143,93,0.14)] text-center"
       >
-        <div className="w-44 h-44 overflow-hidden rounded-md">
+        <div className="w-44 h-44 overflow-hidden rounded-md select-none">
           <Image
             src={image}
             alt={name}
             width={176}
             height={176}
             priority={true}
+            className="select-none"
           />
         </div>
-        <span className="text-xl font-semibold text-center mt-4">{name}</span>
+        <span className="text-xl font-semibold text-center mt-4 select-none">{name}</span>
       </motion.div>
-    </div>
   );
 };
 
