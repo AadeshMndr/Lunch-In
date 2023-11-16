@@ -43,7 +43,7 @@ const MealSlider: React.FC<Props> = () => {
         className="px-24 shadow-shadowLeft rounded-md bg-[rgb(212,142,93)] flex flex-col items-center justify-center gap-y-5"
       >
         <span className="text-2xl font-cursive min-w-max select-none">View Menu</span>
-        <Salad className="w-20 h-20 select-none"/>
+        <Salad className="w-20 h-20"/>
       </motion.div>
     </div>
   );

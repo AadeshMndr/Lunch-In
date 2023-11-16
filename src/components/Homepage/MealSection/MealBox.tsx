@@ -25,16 +25,9 @@ const MealBox: React.FC<Props> = ({ meal: { name, image, id }, index }) => {
 
   return (
       <motion.div
+        onContextMenu={(event) => event.preventDefault()}
         id={`meal-${id}`}
         onClick={goToSpecificMenu}
-        onTouchStart={(event) => {
-          try{
-          event.preventDefault();
-          } catch {
-
-          }
-        }}
-        onContextMenu={(event) => event.preventDefault()}
         whileHover={
           isMobile
             ? {
@@ -62,9 +55,9 @@ const MealBox: React.FC<Props> = ({ meal: { name, image, id }, index }) => {
         }
         transition={isMobile ? { delay: 0.2 } : { stiffness: 100 }}
         initial={{ x: -index * 75 }}
-        className="touch-auto p-3 shadow-shadowLeft rounded-md bg-gradient-to-r from-[rgb(212,142,93)] to-[rgba(212,143,93,0.14)] text-center"
+        className="p-3 shadow-shadowLeft rounded-md bg-gradient-to-r from-[rgb(212,142,93)] to-[rgba(212,143,93,0.14)] text-center"
       >
-        <div className="w-44 h-44 overflow-hidden rounded-md select-none">
+        <div className="w-44 h-44 overflow-hidden rounded-md">
           <Image
             src={image}
             alt={name}
