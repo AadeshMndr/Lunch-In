@@ -6,7 +6,7 @@ export class Meal {
     public image: string,
     public id?: number
   ) {
-    this.id = id || Math.random();
+    this.id = (id || Math.random());
   }
 }
 
