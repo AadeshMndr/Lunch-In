@@ -7,17 +7,7 @@ import { Salad } from "lucide-react";
 
 import MealBox from "./MealBox";
 import { useWindowDimension } from "@/hooks/dimension";
-import { Meal, picture } from "@/models/Meal";
-
-const DUMMY_DATA = [
-  new Meal("Somedish1", "A good food", 34, picture),
-  new Meal("Somedish2", "A good food", 54, picture),
-  new Meal("Somedish3", "A good food", 54, picture),
-  new Meal("Somedish4", "A good food", 54, picture),
-  new Meal("Somedish5", "A good food", 54, picture),
-  new Meal("Somedish6", "A good food", 54, picture),
-  new Meal("Somedish7", "A good food", 54, picture),
-];
+import { Meal, DUMMY_DATA } from "@/models/Meal";
 
 interface Props {}
 
@@ -78,7 +68,6 @@ const MealSlider: React.FC<Props> = () => {
     setSelectedCard((prevState) => {
       if (prevState === index) {
         if (selectedCard !== null) {
-          animateHidingCard(selectedCard);
           setSelectedCard(null);
         }
         router.push(`/menu?mealId=${id}`);

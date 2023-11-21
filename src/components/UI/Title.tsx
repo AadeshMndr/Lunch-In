@@ -9,6 +9,7 @@ const titleVariance = cva("font-bold font-bubblegum text-center drop-shadow-sm",
       default: "",
       small: "",
       large: "text-5xl",
+      medium: "text-xl",
     },
     colorScheme: {
       black: "text-black",
@@ -16,7 +17,8 @@ const titleVariance = cva("font-bold font-bubblegum text-center drop-shadow-sm",
     },
     spaceScheme: {
       default: "",
-      spaceBelow: "mb-5"
+      spaceBelow: "mb-5",
+      spaceAbove: "mt-5",
     },
   },
   defaultVariants: {
