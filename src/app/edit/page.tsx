@@ -1,19 +1,8 @@
-"use client";
-
-import { signOut } from "next-auth/react";
-
-import Button from "@/components/UI/Button";
+import Options from "@/components/EditPage/Options";
 
 const EditPage = () => {
-    const leaveAdminMode = () => {
-        signOut({ redirect: true, callbackUrl: "/admin" })
-    }
-
   return (
-    <div>
-      This is the edit page
-      <Button onClick={leaveAdminMode}>Sign Out</Button>
-    </div> 
+     <Options />
   );
 };
 

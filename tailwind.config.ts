@@ -11,9 +11,9 @@ const config: Config = {
       screens: {
         mobile: {
           min: "200px",
-          max: "450px",
+          max: "500px",
         },
-        pc: "451px",
+        pc: "501px",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

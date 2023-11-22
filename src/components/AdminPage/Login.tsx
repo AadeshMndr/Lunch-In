@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 
 import Button from "../UI/Button";
 
@@ -14,8 +14,7 @@ interface FieldValues {
   password: string;
 }
 
-interface Props {
-}
+interface Props {}
 
 const LoginForm: React.FC<Props> = () => {
   const {
@@ -26,6 +25,8 @@ const LoginForm: React.FC<Props> = () => {
   } = useForm<FieldValues>();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [visible, setVisible] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -81,6 +82,10 @@ const LoginForm: React.FC<Props> = () => {
     router.push("/");
   };
 
+  const toggleVisibility = () => {
+    setVisible((prevState) => !prevState);
+  };
+
   return (
     <form
       onSubmit={handleSubmit(submitHandler)}
@@ -91,7 +96,9 @@ const LoginForm: React.FC<Props> = () => {
           username:{" "}
         </label>
         <input
-          {...register("username", { required: "The username is required !" })}
+          {...register("username", {
+            required: "The username is required !",
+          })}
           type="text"
           id="username"
           className="focus:outline-none bg-primaryBrown text-black font-semibold mt-1 p-1"
@@ -104,18 +111,42 @@ const LoginForm: React.FC<Props> = () => {
         <label htmlFor="password" className="text-lg">
           password:{" "}
         </label>
-        <input
-          {...register("password", { required: "The password is required !" })}
-          type="password"
-          id="password"
-          className="focus:outline-none bg-primaryBrown text-black font-semibold mt-1 p-1"
-        />
+        <div className="relative">
+          <input
+            {...register("password", {
+              required: "The password is required !",
+            })}
+            type={visible ? "text" : "password"}
+            id="password"
+            className="w-full pr-8 rounded-md focus:outline-none bg-primaryBrown text-black font-semibold mt-1 p-1"
+          />
+          {visible ? (
+            <EyeOff
+              width={20}
+              height={20}
+              onClick={toggleVisibility}
+              className="absolute top-2.5 right-2 text-black"
+            />
+          ) : (
+            <Eye
+              width={20}
+              height={20}
+              onClick={toggleVisibility}
+              className="absolute top-2.5 right-2 text-black"
+            />
+          )}
+        </div>
         {errors.password && (
           <p className="text-red-500 mt-2">{errors.password.message}</p>
         )}
       </div>
       <Button className="self-end" size={"medium"} disabled={isLoading}>
-        <div className="flex gap-2 items-center">{isLoading && <Loader2 width={20} height={20} className="animate-spin"/>} login</div>
+        <div className="flex gap-2 items-center">
+          {isLoading && (
+            <Loader2 width={20} height={20} className="animate-spin" />
+          )}{" "}
+          login
+        </div>
       </Button>
       {errors.root && (
         <p className="text-red-500 mt-2">{errors.root.message}</p>

@@ -1,7 +1,37 @@
 import dummyImage from "@/assets/dummyImage.jpeg";
 import { StaticImageData } from "next/image";
+import { z } from "zod";
 
-export type QuantitativePrice = number | { full: number; half: number };
+export const QuantitativePriceSchema = z.union([
+  z.number(),
+  z.object({ full: z.number(), half: z.number() }),
+]);
+
+export const MealSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  image: z.string(),
+  price: z.union([
+    z.number(),
+    z.object({
+      veg: QuantitativePriceSchema,
+      buff: QuantitativePriceSchema.optional(),
+      beef: QuantitativePriceSchema.optional(),
+      chicken: QuantitativePriceSchema.optional(),
+      mutton: QuantitativePriceSchema.optional(),
+      pork: QuantitativePriceSchema.optional(),
+      fish: QuantitativePriceSchema.optional(),
+    }),
+    z.object({ veg: QuantitativePriceSchema, nonVeg: QuantitativePriceSchema }),
+  ]),
+  category: z.enum(["food", "drinks"]),
+  section: z.string(),
+  id: z.number(),
+});
+
+export type MealType = z.infer<typeof MealSchema>;
+
+export type QuantitativePrice = z.infer<typeof QuantitativePriceSchema>;
 
 export type Price =
   | {
@@ -77,10 +107,14 @@ export const DUMMY_DATA = [
     ...new Meal(
       "Somedish-3",
       "A good food",
-      { veg: 200, buff: { half: 130, full: 260 }, pork: { half: 80, full: 120 } },
+      {
+        veg: 200,
+        buff: { half: 130, full: 260 },
+        pork: { half: 80, full: 120 },
+      },
       picture,
-      "drinks",
-      "cold drinks",
+      "food",
+      "sandwich",
       3
     ),
   },
@@ -113,8 +147,8 @@ export const DUMMY_DATA = [
       "A good food",
       14,
       picture,
-      "food",
-      "sandwich",
+      "drinks",
+      "cold drinks",
       7
     ),
   },

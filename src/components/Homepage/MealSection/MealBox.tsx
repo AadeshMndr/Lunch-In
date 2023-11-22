@@ -51,7 +51,7 @@ const MealBox: React.FC<Props> = ({ meal: { name, image, id }, index, selectCard
       }
       transition={isMobile ? { duration: 0.3 } : { stiffness: 100 }}
       initial={{ x: -index * 75 }}
-      className={`MealWithIndex${index} p-3 shadow-shadowLeft rounded-md bg-gradient-to-r from-[60%] from-[rgb(212,142,93)] to-[rgba(212,143,93,0.14)] text-center`}
+      className={`MealWithIndex${index} p-3 shadow-shadowLeft rounded-md bg-gradient-to-r from-[60%] from-[rgb(212,142,93)] to-[rgba(212,143,93,0.14)] flex flex-col justify-evenly items-center`}
     >
       <div className="relative w-40 h-40 overflow-hidden rounded-md">
         <Image

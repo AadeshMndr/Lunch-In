@@ -1,5 +1,6 @@
-import { NextAuthOptions } from "next-auth"; 
+import { NextAuthOptions, getServerSession } from "next-auth"; 
 import Credentials from "next-auth/providers/credentials";
+import { redirect } from "next/navigation";
 
 const adminCredentials = {
     username: "admin",
@@ -30,4 +31,12 @@ export const options: NextAuthOptions = {
     pages: {
         signIn: "/admin",
     },
+}
+
+export const checkAuthentication = async ( redirectTo="/admin" ) => {
+    const session = await getServerSession(options);
+
+    if (!(session?.user?.name)){
+        redirect(redirectTo);
+    }
 }

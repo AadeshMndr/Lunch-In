@@ -10,6 +10,7 @@ const titleVariance = cva("font-bold font-bubblegum text-center drop-shadow-sm",
       small: "",
       large: "text-5xl",
       medium: "text-xl",
+      lessThanLarge: "text-4xl",
     },
     colorScheme: {
       black: "text-black",

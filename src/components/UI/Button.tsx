@@ -13,6 +13,7 @@ const buttonVariance = cva("shadow-md rounded-md px-4 py-2 active:scale-90 trans
     },
     colorScheme: {
       default: "",
+      primaryOrange: "text-primaryBrown bg-primaryOrange font-semibold",
     },
   },
   defaultVariants: {
