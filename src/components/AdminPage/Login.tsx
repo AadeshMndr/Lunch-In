@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 import Button from "../UI/Button";
 
@@ -13,10 +15,9 @@ interface FieldValues {
 }
 
 interface Props {
-  authenticationData: FieldValues;
 }
 
-const LoginForm: React.FC<Props> = ({ authenticationData }) => {
+const LoginForm: React.FC<Props> = () => {
   const {
     register,
     handleSubmit,
@@ -24,45 +25,60 @@ const LoginForm: React.FC<Props> = ({ authenticationData }) => {
     formState: { errors },
   } = useForm<FieldValues>();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const router = useRouter();
 
   const submitHandler: SubmitHandler<FieldValues> = async ({
     username,
     password,
   }) => {
-      const response = await signIn("credentials", {
-        username,
-        password,
-        redirect: false,
+    setIsLoading(true);
+
+    const response = await signIn("credentials", {
+      username,
+      password,
+      redirect: false,
+    });
+
+    if (response === undefined) {
+      console.log("Authorization Failed due to client-side error");
+      toast.error("Authorization Failed due to client-side error");
+
+      setIsLoading(false);
+      return;
+    }
+
+    if (!response.ok) {
+      console.log("Authorization failed  due to invalid Credentials!");
+      toast.error("Invalid Credentials !");
+      setError("root", {
+        message: "The username or the password you entered is incorrect !",
       });
 
-      if(response === undefined){
-        console.log("Authorization Failed due to client-side error");
-        toast.error("Authorization Failed due to client-side error");
-        return;
-      }
+      setIsLoading(false);
+      return;
+    }
 
-      if (!response.ok){
-        console.log("Authorization failed  due to invalid Credentials!");
-        toast.error("Invalid Credentials !");
-        setError("root", { message: "The username or the password you entered is incorrect !" })
-        return;
-      }
+    const url = new URL(decodeURI(response.url || ""));
 
-      const url = new URL(decodeURI(response.url || ""));
+    toast.success("Admin Access Granted !");
 
-      toast.success("Admin Access Granted !");
+    if (url.searchParams.size >= 1) {
+      const urlToBeRedirectedTo = new URL(
+        url.searchParams.get("callbackUrl") || "http://localhost:3000/"
+      );
 
-      if (url.searchParams.size >= 1){
-         const urlToBeRedirectedTo = new URL(url.searchParams.get("callbackUrl") || "http://localhost:3000/");
+      router.push(urlToBeRedirectedTo.pathname);
 
-         router.push(urlToBeRedirectedTo.pathname);
+      setIsLoading(false);
 
-         return;
-      }
+      return;
+    }
 
-      router.push("/");
+    setIsLoading(false);
 
+    router.push("/");
   };
 
   return (
@@ -98,10 +114,12 @@ const LoginForm: React.FC<Props> = ({ authenticationData }) => {
           <p className="text-red-500 mt-2">{errors.password.message}</p>
         )}
       </div>
-      <Button className="self-end" size={"medium"}>
-        login
+      <Button className="self-end" size={"medium"} disabled={isLoading}>
+        <div className="flex gap-2 items-center">{isLoading && <Loader2 width={20} height={20} className="animate-spin"/>} login</div>
       </Button>
-      {errors.root && <p className="text-red-500 mt-2">{errors.root.message}</p>}
+      {errors.root && (
+        <p className="text-red-500 mt-2">{errors.root.message}</p>
+      )}
     </form>
   );
 };
