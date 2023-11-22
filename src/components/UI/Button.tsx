@@ -9,6 +9,7 @@ const buttonVariance = cva("shadow-md rounded-md px-4 py-2 active:scale-90 trans
   variants: {
     size: {
       default: "",
+      medium: "text-lg"
     },
     colorScheme: {
       default: "",

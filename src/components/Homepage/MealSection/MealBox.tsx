@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
@@ -53,14 +53,14 @@ const MealBox: React.FC<Props> = ({ meal: { name, image, id }, index, selectCard
       initial={{ x: -index * 75 }}
       className={`MealWithIndex${index} p-3 shadow-shadowLeft rounded-md bg-gradient-to-r from-[60%] from-[rgb(212,142,93)] to-[rgba(212,143,93,0.14)] text-center`}
     >
-      <div className="w-44 h-44 overflow-hidden rounded-md">
+      <div className="relative w-40 h-40 overflow-hidden rounded-md">
         <Image
           src={image}
           alt={name}
-          width={176}
-          height={176}
+          layout="fill"
           priority={true}
           className="select-none"
+          objectFit="cover"
         />
       </div>
       <span className="text-xl font-semibold text-center mt-4 select-none">

@@ -6,7 +6,7 @@ import MealSlider from "@/components/Homepage/MealSection/MealSlider";
 
 import BackgroundImage from "@/assets/LunchInPoster.png";
 
-export default function Home() {
+export default async function Home() {
 
   return (
    <>
