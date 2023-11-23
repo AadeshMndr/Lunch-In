@@ -2,7 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { BatteryMedium, BatteryFull } from "lucide-react";
+
+import AmountIcons from "../UI/AmountIcons";
+import { stringify, destringify } from "@/lib/utils";
 
 import {
   Price,
@@ -12,43 +14,17 @@ import {
 } from "@/models/Meal";
 
 interface Props {
-  price: Price | number;
+  price: Price | QuantitativePrice;
 }
-
-const stringify = (value: number | object) => {
-  if (typeof value === "number") {
-    return value.toString();
-  }
-
-  const keys = Object.keys(value);
-
-  const stringedObject = keys
-    .map((key) => `${key}:${value[key as keyof typeof value]}`)
-    .join("|-|");
-
-  return stringedObject;
-};
-
-const destringify = (stringedObject: string) => {
-  const stringedPairs = stringedObject.split("|-|");
-
-  const theObject = new Object();
-
-  stringedPairs.forEach((pair) => {
-    const [key, value] = pair.split(":");
-
-    (theObject as any)[key] = Number(value);
-  });
-
-  return theObject;
-};
 
 const PriceBox: React.FC<Props> = ({ price }) => {
   const priceKeys = useMemo(() => getPriceKeys(price), [price]);
 
   const [quantity, setQuantity] = useState<"full" | "half">("full");
   const [selectivePrice, setSelectivePrice] = useState<QuantitativePrice>(
-    typeof price === "number" ? price : (price as any)[priceKeys[0]]
+    typeof price === "number" || "half" in price
+      ? price
+      : (price as any)[priceKeys[0]]
   );
 
   const toggleQuantity = () => {
@@ -64,8 +40,31 @@ const PriceBox: React.FC<Props> = ({ price }) => {
   }
 
   if (
+    priceKeys.includes("half") &&
     priceKeys.every(
-      (validKey) => typeof price[validKey as keyof Price] === "number"
+      (validKey) =>
+        typeof price[
+          validKey as keyof (Price | Exclude<QuantitativePrice, number>)
+        ] === "number"
+    ) &&
+    typeof selectivePrice === "object"
+  ) {
+    return (
+      <div className="flex justify-normal items-center text-primaryOrange font-semibold text-center mx-2">
+        {typeof selectivePrice === "object" && (
+          <AmountIcons quantity={quantity} toggleQuantity={toggleQuantity} />
+        )}
+        Rs. {quantity === "half" ? selectivePrice.half : selectivePrice.full}
+      </div>
+    );
+  }
+
+  if (
+    priceKeys.every(
+      (validKey) =>
+        typeof price[
+          validKey as keyof (Price | Exclude<QuantitativePrice, number>)
+        ] === "number"
     ) &&
     typeof selectivePrice === "number"
   ) {
@@ -79,7 +78,7 @@ const PriceBox: React.FC<Props> = ({ price }) => {
         >
           {priceKeys.map((subject) => (
             <option
-              value={price[subject as keyof Price] as number}
+              value={(price as any)[subject] as number}
               key={subject}
               className="hover:text-red-500"
             >
@@ -96,22 +95,9 @@ const PriceBox: React.FC<Props> = ({ price }) => {
 
   return (
     <div className="flex justify-normal items-center text-primaryOrange font-semibold text-center mx-2">
-      {typeof selectivePrice === "object" &&
-        (quantity === "full" ? (
-          <BatteryFull
-            width={30}
-            height={30}
-            className="-rotate-90 hover:scale-[1.03]"
-            onClick={toggleQuantity}
-          />
-        ) : (
-          <BatteryMedium
-            width={30}
-            height={30}
-            className="-rotate-90 hover:scale-[1.03]"
-            onClick={toggleQuantity}
-          />
-        ))}
+      {typeof selectivePrice === "object" && (
+        <AmountIcons quantity={quantity} toggleQuantity={toggleQuantity} />
+      )}
 
       <div>
         <motion.select
@@ -145,7 +131,10 @@ const PriceBox: React.FC<Props> = ({ price }) => {
           className="max-w-fit focus:outline-none bg-primaryOrange text-primaryBrown rounded-md"
         >
           {priceKeys.map((subject) => {
-            const value = price[subject as keyof Price];
+            const value =
+              price[
+                subject as keyof (Price | Exclude<QuantitativePrice, number>)
+              ];
 
             return (
               <option
@@ -159,7 +148,8 @@ const PriceBox: React.FC<Props> = ({ price }) => {
           })}
         </motion.select>
         <div className="text-primaryOrange font-semibold">
-          Rs. {typeof selectivePrice === "number"
+          Rs.{" "}
+          {typeof selectivePrice === "number"
             ? selectivePrice
             : quantity === "full"
             ? selectivePrice.full

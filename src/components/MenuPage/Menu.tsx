@@ -5,21 +5,12 @@ import SectionHeader from "../UI/SectionHeader";
 import ItemSection from "./ItemSection";
 import { Meal } from "@/models/Meal";
 
+import { getUnrepeatedArray } from "@/lib/utils";
+
 interface Props {
   meals: Meal[];
 }
 
-const getUnrepeatedArray = <T=any>(array: T[]) => {
-  let arr: T[] = [];
-
-  array.forEach( (item) =>{
-    if(!arr.includes(item)){
-      arr.push(item);
-    }
-  });
-
-  return arr;
-}
 
 const Menu: React.FC<Props> = ({ meals }) => {
   const sectionNames = useMemo( () => getUnrepeatedArray<string>(meals.map(({ section }) => section)), [meals, getUnrepeatedArray]);

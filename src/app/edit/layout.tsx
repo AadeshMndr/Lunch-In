@@ -15,7 +15,7 @@ const EditLayout = ({ children }: Props) => {
   };
 
   return (
-    <div className="h-screen w-full pc:overflow-y-hidden">
+    <div className="h-screen w-full">
       <header className="w-full bg-primaryBrown flex pc:justify-around mobile:justify-between items-center px-2 py-4 mobile:p-3">
         <Title className="pc:text-3xl mobile:text-2xl text-orange-950">
           Administrative Privilages
@@ -24,7 +24,7 @@ const EditLayout = ({ children }: Props) => {
           Log Out
         </Button>
       </header>
-      <div className="w-full h-full bg-gradient-to-b from-primaryBrown to-primaryOrange pt-16">
+      <div className="w-full bg-gradient-to-b from-primaryBrown to-primaryOrange pt-16">
         {children}
       </div>
     </div>

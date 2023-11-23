@@ -7,7 +7,7 @@ import { Salad } from "lucide-react";
 
 import MealBox from "./MealBox";
 import { useWindowDimension } from "@/hooks/dimension";
-import { Meal, DUMMY_DATA } from "@/models/Meal";
+import { DUMMY_DATA } from "@/models/Meal";
 
 interface Props {}
 
