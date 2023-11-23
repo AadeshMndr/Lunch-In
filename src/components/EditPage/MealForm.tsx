@@ -153,7 +153,7 @@ const MealForm: React.FC<Props> = ({ meals }) => {
         ) : (
           <div className="flex flex-col items-center gap-1">
             {choosenKeys.map((key) => (
-              <div className="flex flex-row items-center gap-2 my-3">
+              <div className="flex flex-row items-center gap-2 my-3" key={`input-${key}`}>
                 <label htmlFor={`${getProperNameOfKeys(key)}-price`} className="font-semibold min-w-max">{`${getProperNameOfKeys(key)}: `}</label>
                 <BranchableInput type="number" id={`${getProperNameOfKeys(key)}-price`}/>
               </div>

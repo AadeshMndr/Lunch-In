@@ -13,7 +13,7 @@ interface Props {
 
 
 const Menu: React.FC<Props> = ({ meals }) => {
-  const sectionNames = useMemo( () => getUnrepeatedArray<string>(meals.map(({ section }) => section)), [meals, getUnrepeatedArray]);
+  const sectionNames = useMemo( () => getUnrepeatedArray<string>(meals.map(({ section }) => section)), [meals]);
 
   return (
     <div>
