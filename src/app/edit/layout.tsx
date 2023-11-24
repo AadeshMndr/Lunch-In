@@ -24,7 +24,7 @@ const EditLayout = ({ children }: Props) => {
           Log Out
         </Button>
       </header>
-      <div className="w-full bg-gradient-to-b from-primaryBrown to-primaryOrange pt-16">
+      <div className="w-full bg-gradient-to-b from-primaryBrown to-primaryOrange">
         {children}
       </div>
     </div>

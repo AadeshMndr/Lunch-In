@@ -14,6 +14,7 @@ const buttonVariance = cva("shadow-md rounded-md px-4 py-2 active:scale-90 trans
     colorScheme: {
       default: "",
       primaryOrange: "text-primaryBrown bg-primaryOrange font-semibold",
+      inversePrimaryOrange: "text-primaryOrange bg-primaryBrown font-bold",
     },
   },
   defaultVariants: {
@@ -33,6 +34,7 @@ const Button: React.FC<Props> = ({
   colorScheme,
   className,
   children,
+  isLoading,
   ...props
 }) => {
   return (
