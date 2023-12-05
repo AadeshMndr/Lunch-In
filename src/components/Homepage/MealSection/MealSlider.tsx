@@ -64,7 +64,7 @@ const MealSlider: React.FC<Props> = () => {
     );
   };
 
-  const selectCard = (index: number | null, id?: number) => {
+  const selectCard = (index: number | null, id?: string) => {
     setSelectedCard((prevState) => {
       if (prevState === index) {
         if (selectedCard !== null) {

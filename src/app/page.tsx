@@ -4,6 +4,7 @@ import TitleCard from "@/components/Homepage/TitleCard";
 import Title from "@/components/UI/Title";
 import MealSlider from "@/components/Homepage/MealSection/MealSlider";
 
+
 import BackgroundImage from "@/assets/LunchInPoster.png";
 
 export default async function Home() {

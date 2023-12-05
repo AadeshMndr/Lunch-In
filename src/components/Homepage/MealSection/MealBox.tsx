@@ -9,7 +9,7 @@ import { Meal } from "@/models/Meal";
 interface Props {
   meal: Meal;
   index: number;
-  selectCard: (index: number | null, id?: number) => void;
+  selectCard: (index: number | null, id?: string) => void;
   scrollAreaWidth: number;
   isMobile: boolean;
 }

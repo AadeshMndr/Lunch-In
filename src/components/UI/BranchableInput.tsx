@@ -11,6 +11,7 @@ import {
 import { CircleSlash2, Circle } from "lucide-react";
 
 import { MealFormInput } from "@/models/MealForm";
+import { Price } from "@/models/Meal";
 
 interface Props {
   type: InputHTMLAttributes<HTMLInputElement>["type"];
@@ -21,6 +22,7 @@ interface Props {
   setError: UseFormSetError<MealFormInput>;
   clearError: UseFormClearErrors<MealFormInput>;
   isSubmitting: boolean;
+  defaultCondition?: boolean;
 }
 
 const priceInputisValid = (value: string) => {
@@ -40,9 +42,10 @@ const BranchableInput: React.FC<Props> = ({
   resetField,
   setError,
   clearError,
-  isSubmitting
+  isSubmitting,
+  defaultCondition=false
 }) => {
-  const [branchOut, setBranchOut] = useState<boolean>(false);
+  const [branchOut, setBranchOut] = useState<boolean>(defaultCondition);
 
   const [touchedHalf, setTouchedHalf] = useState<boolean>(false);
   const [touchedFull, setTouchedFull] = useState<boolean>(false);
@@ -58,7 +61,7 @@ const BranchableInput: React.FC<Props> = ({
         setError(id === "price" ? "price.full" : (`price.${id}.full` as any), { message: "You cannot keep empty price for full!" })
       }
     }
-  }, [isSubmitting, touched, touchedHalf, touchedFull, branchOut]);
+  }, [isSubmitting, touched, touchedHalf, touchedFull, branchOut, id, setError]);
 
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>(
     null

@@ -53,3 +53,43 @@ export const readAsDataURLAsync = (file: File) => {
       reader.readAsDataURL(file);
     });
 }
+
+export const convertToNumberObject = (obj: string | object) => {
+  if (typeof obj === "string"){
+    return Number(obj);
+  }
+
+  let newObj = new Object();
+
+  const keys = Object.keys(obj);
+
+  keys.forEach( (key) => {
+    if ((obj as any)[key] == undefined){
+      return;
+    }
+
+    (newObj as any)[key] = convertToNumberObject(obj[key as keyof typeof obj]);
+  });
+
+  return newObj;
+}
+
+export const convertToStringObject = (obj: number | object) => {
+  if (typeof obj === "number"){
+    return obj.toString();
+  }
+
+  let newObj = new Object();
+
+  const keys = Object.keys(obj);
+
+  keys.forEach( (key) => {
+    if ((obj as any)[key] === undefined){
+      return;
+    }
+
+    (newObj as any)[key] = convertToStringObject(obj[key as keyof typeof obj]);
+  });
+
+  return newObj;
+}

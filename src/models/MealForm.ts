@@ -18,6 +18,8 @@ export const QuantitativePriceSchema = z.union([
   z.object({ full: convertibleToNumber, half: convertibleToNumber }),
 ]);
 
+//solved an issue here by changing the union for two separate objects into one single object!
+
 const PriceFormSchema = z.object({
   veg: QuantitativePriceSchema.optional(),
   buff: QuantitativePriceSchema.optional(),

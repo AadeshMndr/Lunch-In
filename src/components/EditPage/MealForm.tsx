@@ -2,26 +2,51 @@
 
 import { ChangeEventHandler, useState } from "react";
 import Image from "next/legacy/image";
-import { useForm, SubmitHandler, SubmitErrorHandler, FieldError } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import {
+  useForm,
+  SubmitHandler,
+  SubmitErrorHandler,
+  FieldError,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { nanoid } from "nanoid";
 
-import { Meal, keyArray, getProperNameOfKeys, PriceKey } from "@/models/Meal";
+import {
+  Meal,
+  keyArray,
+  getProperNameOfKeys,
+  PriceKey,
+  MealSchema,
+} from "@/models/Meal";
 import { mealFormInputFieldSchema, MealFormInput } from "@/models/MealForm";
-import { getUnrepeatedArray, readAsDataURLAsync } from "@/lib/utils";
+import {
+  getUnrepeatedArray,
+  readAsDataURLAsync,
+  convertToNumberObject,
+} from "@/lib/utils";
 import BranchableInput from "../UI/BranchableInput";
 import Button from "../UI/Button";
 import ErronousP from "../UI/ErronousP";
 
 interface Props {
   meals: Meal[];
+  defaultValues?: MealFormInput;
+  purpose: "adding" | "editing";
 }
 
-const MealForm: React.FC<Props> = ({ meals }) => {
-  const [choosenKeys, setChoosenKeys] = useState<PriceKey[]>([]);
+const MealForm: React.FC<Props> = ({ meals, defaultValues, purpose }) => {
+  const [choosenKeys, setChoosenKeys] = useState<PriceKey[]>(
+    defaultValues ? (Object.keys(defaultValues.price) as PriceKey[]) : []
+  );
 
   const [preview, setPreview] = useState<
     string | ArrayBuffer | null | undefined
-  >(null);
+  >(defaultValues ? defaultValues.image : null);
+
+  const router = useRouter();
 
   const {
     register,
@@ -33,6 +58,7 @@ const MealForm: React.FC<Props> = ({ meals }) => {
     clearErrors,
   } = useForm<MealFormInput>({
     resolver: zodResolver(mealFormInputFieldSchema),
+    defaultValues,
   });
 
   const dealWithKeyCheckBox = (key: PriceKey) => {
@@ -63,16 +89,6 @@ const MealForm: React.FC<Props> = ({ meals }) => {
       )
       .map(({ section }) => section)
   );
-
-  const submitHandler: SubmitHandler<MealFormInput> = (meal) => {
-    if(Object.keys(errors).length > 0){
-      console.log("The form still has errors !", errors);
-
-      return;
-    }
-
-    console.log(meal);
-  };
 
   const setupPreview: ChangeEventHandler<HTMLInputElement> = async (event) => {
     if (event.target.files) {
@@ -105,10 +121,68 @@ const MealForm: React.FC<Props> = ({ meals }) => {
     }
   };
 
+  const submitHandler: SubmitHandler<MealFormInput> =
+    purpose === "adding"
+      ? async (meal) => {
+          if (Object.keys(errors).length > 0) {
+            console.log("The form still has errors !", errors);
+
+            toast.error("Meal Form couldn't be submitted !");
+            return;
+          }
+
+          let image = preview;
+
+          if (!preview) {
+            image = await readAsDataURLAsync(meal.image.file[0]);
+          }
+
+          const parsedData = MealSchema.safeParse({
+            ...meal,
+            price: convertToNumberObject(meal.price),
+            image,
+            id: nanoid(),
+          } as Meal);
+
+          if (!parsedData.success) {
+            console.log("Some Error occured !: ", parsedData.error);
+
+            return;
+          }
+
+          mutate(parsedData.data);
+
+          toast.success("Meal Submission Successfull !");
+
+          //do optimistic updating over here.....later....
+          router.push("/menu");
+        }
+      : async (meal) => {
+          console.log("Editing form was submitted!");
+        };
+
   const tester: SubmitErrorHandler<MealFormInput> = (obj) => {
+    toast.error("Meal Form couldn't be submitted !");
     console.log("Error");
   };
 
+  const { mutate } = useMutation({
+    mutationFn: async (data: Meal) => {
+      const response = await fetch("/api/meal", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        toast.error("Unable to store the meal data in the Database !");
+
+        return;
+      }
+    },
+  });
 
   return (
     <form
@@ -227,6 +301,11 @@ const MealForm: React.FC<Props> = ({ meals }) => {
             setError={setError}
             clearError={clearErrors}
             isSubmitting={isSubmitting}
+            defaultCondition={
+              defaultValues && typeof defaultValues.price !== "string"
+                ? "full" in defaultValues.price
+                : false
+            }
           />
         ) : (
           <div className="flex flex-col items-center gap-1">
@@ -248,15 +327,34 @@ const MealForm: React.FC<Props> = ({ meals }) => {
                   setError={setError}
                   clearError={clearErrors}
                   isSubmitting={isSubmitting}
+                  defaultCondition={
+                    defaultValues &&
+                    typeof defaultValues.price[
+                      key as keyof typeof defaultValues.price
+                    ] !== "string"
+                      ? "full" in
+                        defaultValues.price[
+                          key as keyof typeof defaultValues.price
+                        ]
+                      : false
+                  }
                 />
               </div>
             ))}
           </div>
         )}
       </div>
-      {errors.price && !("half" in errors.price) && !("full" in errors.price) && <ErronousP message={errors.price.message} />}
-      {errors.price && ("half" in errors.price) && <ErronousP message={(errors.price.half as FieldError).message} />}
-      {errors.price && ("full" in errors.price) && <ErronousP message={(errors.price.full as FieldError).message} />}
+      {errors.price &&
+        !("half" in errors.price) &&
+        !("full" in errors.price) && (
+          <ErronousP message={errors.price.message} />
+        )}
+      {errors.price && "half" in errors.price && (
+        <ErronousP message={(errors.price.half as FieldError).message} />
+      )}
+      {errors.price && "full" in errors.price && (
+        <ErronousP message={(errors.price.full as FieldError).message} />
+      )}
       <div className="flex flex-row gap-3 items-center text-orange-950 mt-5">
         <label htmlFor="image" className="text-lg font-semibold">
           Image:{" "}

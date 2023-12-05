@@ -1,6 +1,5 @@
 import Menu from "@/components/MenuPage/Menu";
 import MealShowCase from "@/components/MenuPage/MealShowCase";
-
 import { DUMMY_DATA } from "@/models/Meal";
 
 interface PageProps {
@@ -11,22 +10,24 @@ interface PageProps {
 }
 
 const MenuPage = ({ searchParams: { mealId } }: PageProps) => {
+
   return (
-    <div>
-      {mealId && DUMMY_DATA.some((meal) => meal.id === Number(mealId)) && (
+      <div>
+        {mealId && DUMMY_DATA.some((meal) => meal.id === mealId) && (
+          <section>
+            <MealShowCase
+              meal={DUMMY_DATA.filter((meal) => meal.id === mealId)[0]}
+            />
+          </section>
+        )}
         <section>
-          <MealShowCase
-            meal={DUMMY_DATA.filter((meal) => meal.id === Number(mealId))[0]}
-          />
+          <Menu meals={DUMMY_DATA} />
         </section>
-      )}
-      <section>
-        <Menu meals={DUMMY_DATA} />
-      </section>
-      <section>
-        Having trouble deciding your meal, take a look at some recommendations.
-      </section>
-    </div>
+        <section>
+          Having trouble deciding your meal, take a look at some
+          recommendations.
+        </section>
+      </div>
   );
 };
 

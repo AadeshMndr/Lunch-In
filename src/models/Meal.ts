@@ -1,5 +1,4 @@
-import dummyImage from "@/assets/dummyImage.jpeg";
-import { StaticImageData } from "next/image";
+import { picture as dummyImage } from "@/assets/dummyImage";
 import { z } from "zod";
 
 export const QuantitativePriceSchema = z.union([
@@ -7,45 +6,33 @@ export const QuantitativePriceSchema = z.union([
   z.object({ full: z.number(), half: z.number() }),
 ]);
 
-export const PriceSchema = z.union([
-  z.object({
-    veg: QuantitativePriceSchema.optional(),
-    buff: QuantitativePriceSchema.optional(),
-    beef: QuantitativePriceSchema.optional(),
-    chicken: QuantitativePriceSchema.optional(),
-    mutton: QuantitativePriceSchema.optional(),
-    pork: QuantitativePriceSchema.optional(),
-    fish: QuantitativePriceSchema.optional(),
-    mix: QuantitativePriceSchema.optional(),
-  }),
-  z.object({ veg: QuantitativePriceSchema, nonVeg: QuantitativePriceSchema }),
-]);
+export const PriceSchema = z.object({
+  veg: QuantitativePriceSchema.optional(),
+  buff: QuantitativePriceSchema.optional(),
+  beef: QuantitativePriceSchema.optional(),
+  chicken: QuantitativePriceSchema.optional(),
+  mutton: QuantitativePriceSchema.optional(),
+  pork: QuantitativePriceSchema.optional(),
+  fish: QuantitativePriceSchema.optional(),
+  mix: QuantitativePriceSchema.optional(),
+  nonVeg: QuantitativePriceSchema.optional(),
+});
 
 type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
 
-type A = Prettify<StaticImageData>;
-
 export const MealSchema = z.object({
   name: z.string(),
   description: z.string(),
-  image: z.union([
-    z.string(),
-    z.object({
-      src: z.string(),
-      height: z.number(),
-      width: z.number(),
-      blurDataURL: z.string().optional(),
-      blurWidth: z.number().optional(),
-      blurHeight: z.number().optional(),
-    }),
-  ]),
+  image: z.string(),
   price: z.union([QuantitativePriceSchema, PriceSchema]),
   category: z.enum(["food", "drinks"]),
   section: z.string(),
-  id: z.number(),
+  id: z.string(),
 });
+
+export const ArrayOfMealsSchema = z.array(MealSchema);
 
 export type Meal = z.infer<typeof MealSchema>;
 
@@ -97,10 +84,10 @@ export class MealClass {
     public name: string,
     public description: string,
     public price: QuantitativePrice | Price,
-    public image: string | StaticImageData,
+    public image: string,
     public category: "food" | "drinks",
     public section: string,
-    public id: number
+    public id: string
   ) {}
 }
 
@@ -115,7 +102,7 @@ export const DUMMY_DATA = [
       picture,
       "food",
       "momo",
-      1
+      "1"
     ),
   },
   {
@@ -126,7 +113,7 @@ export const DUMMY_DATA = [
       picture,
       "food",
       "momo",
-      2
+      "2"
     ),
   },
   {
@@ -141,7 +128,7 @@ export const DUMMY_DATA = [
       picture,
       "food",
       "sandwich",
-      3
+      "3"
     ),
   },
   {
@@ -152,7 +139,7 @@ export const DUMMY_DATA = [
       picture,
       "food",
       "pizza",
-      4
+      "4"
     ),
   },
   {
@@ -163,7 +150,7 @@ export const DUMMY_DATA = [
       picture,
       "food",
       "chowmein",
-      5
+      "5"
     ),
   },
   {
@@ -174,7 +161,7 @@ export const DUMMY_DATA = [
       picture,
       "drinks",
       "hot drinks",
-      6
+      "6"
     ),
   },
   {
@@ -185,7 +172,7 @@ export const DUMMY_DATA = [
       picture,
       "drinks",
       "cold drinks",
-      7
+      "7"
     ),
   },
   {
@@ -196,7 +183,7 @@ export const DUMMY_DATA = [
       picture,
       "food",
       "thukpa",
-      8
+      "8"
     ),
   },
   {
@@ -207,7 +194,7 @@ export const DUMMY_DATA = [
       picture,
       "food",
       "fried rice",
-      9
+      "9"
     ),
   },
   {
@@ -218,7 +205,7 @@ export const DUMMY_DATA = [
       picture,
       "food",
       "fried rice",
-      10
+      "10"
     ),
   },
   {
@@ -229,7 +216,7 @@ export const DUMMY_DATA = [
       picture,
       "food",
       "snacks",
-      11
+      "11"
     ),
   },
   {
@@ -240,7 +227,7 @@ export const DUMMY_DATA = [
       picture,
       "food",
       "chowmein",
-      12
+      "12"
     ),
   },
 ];

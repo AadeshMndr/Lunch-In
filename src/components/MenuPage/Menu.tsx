@@ -1,9 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+
 import SectionHeader from "../UI/SectionHeader";
 import ItemSection from "./ItemSection";
 import { Meal } from "@/models/Meal";
+
 
 import { getUnrepeatedArray } from "@/lib/utils";
 
@@ -13,6 +16,26 @@ interface Props {
 
 
 const Menu: React.FC<Props> = ({ meals }) => {
+
+  const { data } = useQuery<Meal[]>({
+    queryKey: ["meals"],
+    queryFn: async () => {
+      const response = await fetch("/api/meal");
+
+      if (!response.ok){
+        console.log("Some Error occured!");
+
+        return;
+      }
+
+      const data = await response.json();
+
+      return data;
+    }
+  });
+
+  console.log("The data is: ", data);
+
   const sectionNames = useMemo( () => getUnrepeatedArray<string>(meals.map(({ section }) => section)), [meals]);
 
   return (
