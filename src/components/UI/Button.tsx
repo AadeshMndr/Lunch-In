@@ -15,6 +15,7 @@ const buttonVariance = cva("shadow-md rounded-md px-4 py-2 active:scale-90 trans
       default: "",
       primaryOrange: "text-primaryBrown bg-primaryOrange font-semibold",
       inversePrimaryOrange: "text-primaryOrange bg-primaryBrown font-bold",
+      inputField: "bg-orange-200 text-primaryOrange font-bold",
     },
   },
   defaultVariants: {

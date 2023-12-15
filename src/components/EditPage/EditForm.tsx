@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEventHandler, useState } from "react";
+import { ChangeEventHandler, useState, useEffect } from "react";
 import Image from "next/legacy/image";
 import { useRouter } from "next/navigation";
 import {
@@ -21,7 +21,11 @@ import {
   PriceKey,
   MealSchema,
 } from "@/models/Meal";
-import { mealFormInputFieldSchema, MealFormInput } from "@/models/MealForm";
+import {
+  mealFormInputFieldSchema,
+  MealFormInput,
+  QuantitativePriceSchema,
+} from "@/models/MealForm";
 import {
   getUnrepeatedArray,
   readAsDataURLAsync,
@@ -34,19 +38,33 @@ import ErronousP from "../UI/ErronousP";
 
 interface Props {
   meals: Meal[];
-  defaultValues?: MealFormInput;
+  defaultValues: MealFormInput;
+  originalID: string;
 }
 
-//When ever we edit the form the fields are still untouched so Invalid input errors arises deal with it.
-
-const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
+const EditForm: React.FC<Props> = ({ meals, defaultValues, originalID }) => {
   const [choosenKeys, setChoosenKeys] = useState<PriceKey[]>(
-    defaultValues ? (Object.keys(defaultValues.price) as PriceKey[]) : []
+    typeof defaultValues.price === "string" ? [] :
+    Object.keys(defaultValues.price) as PriceKey[]
+  );
+
+  const [changeImage, setChangeImage] = useState<boolean>(false);
+  const [imageError, setImageError] = useState<undefined | { message: string }>(
+    undefined
   );
 
   const [preview, setPreview] = useState<
     string | ArrayBuffer | null | undefined
-  >(defaultValues ? defaultValues.image : null);
+  >(defaultValues.image);
+
+  useEffect(() => {
+    if (changeImage) {
+      setPreview(null);
+    } else {
+      setImageError(undefined);
+      setPreview(defaultValues.image);
+    }
+  }, [changeImage, defaultValues.image]);
 
   const router = useRouter();
 
@@ -58,7 +76,7 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
     resetField,
     formState: { errors, isSubmitting },
     clearErrors,
-  } = useForm<MealFormInput>({
+  } = useForm<Omit<MealFormInput, "image">>({
     resolver: zodResolver(mealFormInputFieldSchema),
     defaultValues,
   });
@@ -100,7 +118,7 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
         if (type !== "image") {
           setPreview(null);
 
-          setError("image", { message: "Only image files are accepted!" });
+          setImageError({ message: "Only image files are accepted!" });
 
           return;
         }
@@ -108,63 +126,88 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
         try {
           const imageUrl = await readAsDataURLAsync(event.target.files[0]);
 
+          setImageError(undefined);
           setPreview(imageUrl);
-
-          clearErrors("image");
         } catch (err) {
           console.log(err);
-          setError("image", { message: "Invalid Image File" });
+          setImageError({ message: "Invalid Image File" });
         }
       } else {
         setPreview(null);
 
-        setError("image", { message: "Upload an image file ." });
+        setImageError({ message: "Upload an image file ." });
       }
     }
   };
 
   const submitHandler: SubmitHandler<MealFormInput> = async (meal) => {
-          if (!imageFileValidator(meal.image)) {
-            setError("image", { message: "Upload a valid image file!" });
+    if (preview === null) {
+      setImageError({ message: "No Image file selected !" });
+      return;
+    }
 
-            return;
-          }
+    let image = preview;
 
-          if (Object.keys(errors).length > 0) {
-            console.log("The form still has errors !", errors);
+    if (Object.keys(errors).length > 0) {
+      const erronousKeys = Object.keys(errors);
 
-            toast.error("Meal Form couldn't be submitted !");
-            return;
-          }
+      if (
+        erronousKeys.length === 1 &&
+        erronousKeys.includes("price") &&
+        choosenKeys.every((key) => {
+          const result = QuantitativePriceSchema.safeParse(
+            watch(`price.${key}`)
+          );
 
-          let image = preview;
+          return result.success;
+        })
+      ) {
+        let watchedPrice = new Object();
 
-          if (!preview) {
-            image = await readAsDataURLAsync(meal.image.file[0]);
-          }
+        choosenKeys.forEach((key) => {
+          (watchedPrice as any)[key] = watch(`price.${key}`);
+        });
 
-          const parsedData = MealSchema.safeParse({
-            ...meal,
-            price: convertToNumberObject(meal.price),
-            image,
-            id: nanoid(),
-          } as Meal);
+        meal.price = watchedPrice;
+        
+      } else {
+        console.log("The form still has errors !", errors);
 
-          if (!parsedData.success) {
-            console.log("Some Error occured !: ", parsedData.error);
+        toast.error("Meal Form couldn't be submitted !");
+        return;
+      }
+    }
 
-            toast.error("Meal Form couldn't be submitted !");
+    let watchedPrice = new Object();
 
-            return;
-          }
+    choosenKeys.forEach((key) => {
+        (watchedPrice as any)[key] = watch(`price.${key}`);
+    });
 
-          mutate(parsedData.data);
+    meal.price = watchedPrice;
 
-          toast.success("Meal Submission Successfull !");
+    const parsedData = MealSchema.safeParse({
+      ...meal,
+      price: convertToNumberObject(meal.price),
+      image,
+      id: originalID,
+    } as Meal);
 
-          //do optimistic updating over here.....later....
-          router.push("/menu");
-        }
+    if (!parsedData.success) {
+      console.log("Some Error occured !: ", parsedData.error);
+
+      toast.error("Meal Form couldn't be submitted !");
+
+      return;
+    }
+
+    mutate(parsedData.data);
+
+    toast.success("Meal Submission Successfull !");
+
+    //do optimistic updating over here.....later....
+    router.push("/menu");
+  };
 
   const tester: SubmitErrorHandler<MealFormInput> = (obj) => {
     toast.error("Meal Form couldn't be submitted !");
@@ -173,7 +216,7 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: Meal) => {
-      const response = await fetch("/api/meal", {
+      const response = await fetch(`/api/meal/${data.id}`, {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -182,8 +225,8 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
       });
 
       if (!response.ok) {
-        toast.error("Unable to store the meal data in the Database !");
-
+        console.log("Couldn't get a proper response from the server !");
+        toast.error("Couldn't edit the dish!");
         return;
       }
     },
@@ -336,11 +379,9 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
                     defaultValues &&
                     typeof defaultValues.price[
                       key as keyof typeof defaultValues.price
-                    ] !== "string"
-                      ? "full" in
-                        defaultValues.price[
-                          key as keyof typeof defaultValues.price
-                        ]
+                    ] !== "string" &&
+                    defaultValues.price[key as keyof typeof defaultValues.price]
+                      ? "full" in defaultValues.price[key as keyof typeof defaultValues.price]
                       : false
                   }
                 />
@@ -360,19 +401,30 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
       {errors.price && "full" in errors.price && (
         <ErronousP message={(errors.price.full as FieldError).message} />
       )}
-      <div className="flex flex-row gap-3 items-center text-orange-950 mt-5">
-        <label htmlFor="image" className="text-lg font-semibold">
-          Image:{" "}
-        </label>
-        <input
-          {...register("image")}
-          id="image"
-          accept="image/*"
-          type="file"
-          onChange={setupPreview}
-          className="w-full rounded-md p-2 focus:outline-none bg-orange-200 leading-6 text-orange-950 font-semibold"
-        />
-      </div>
+      <Button
+        colorScheme={"inputField"}
+        type="button"
+        onClick={() => setChangeImage((prevState) => !prevState)}
+        className="mt-4"
+      >
+        Edit image
+      </Button>
+      {changeImage && (
+        <div className="flex flex-row gap-3 items-center text-orange-950 mt-5">
+          <label htmlFor="image" className="text-lg font-semibold">
+            Image:{" "}
+          </label>
+          <input
+            //   {...register("image")}
+            id="image"
+            accept="image/*"
+            type="file"
+            onChange={setupPreview}
+            className="w-full rounded-md p-2 focus:outline-none bg-orange-200 leading-6 text-orange-950 font-semibold"
+          />
+        </div>
+      )}
+
       {typeof preview === "string" && (
         <div className="w-full mobile:h-32 pc:h-48 relative mt-5">
           <Image
@@ -383,14 +435,8 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
           />
         </div>
       )}
-      {errors.image && (
-        <ErronousP
-          message={
-            typeof errors.image.message === "string"
-              ? errors.image.message
-              : "Invalid image file !"
-          }
-        />
+      {imageError && (
+        <ErronousP message={imageError.message || "Invalid image file !"} />
       )}
       <div className="flex flex-col gap-3 items-center text-orange-950 mt-5">
         <label
@@ -415,4 +461,4 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
   );
 };
 
-export default MealForm;
+export default EditForm;

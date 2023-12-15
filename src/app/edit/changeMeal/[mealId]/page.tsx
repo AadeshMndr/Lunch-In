@@ -3,7 +3,7 @@ import { MealFormInput } from "@/models/MealForm";
 import { executeInDB } from "@/lib/db";
 import { Meal, ArrayOfMealsSchema } from "@/models/Meal";
 import Title from "@/components/UI/Title";
-import MealForm from "@/components/EditPage/MealForm";
+import EditForm from "@/components/EditPage/EditForm";
 
 interface PageProps {
   params: {
@@ -43,7 +43,7 @@ const FormPage = async ({ params }: PageProps) => {
       <Title colorScheme={"primary"} size={"lessThanLarge"}>
         { `Edit ${meal.name}` }
       </Title>
-      <MealForm meals={[]} defaultValues={meal} purpose="editing"/>
+      <EditForm meals={[]} defaultValues={meal} originalID={params.mealId}/>
     </div>
   );
 };

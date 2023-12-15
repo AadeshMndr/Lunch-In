@@ -34,7 +34,7 @@ const Menu: React.FC<Props> = ({ meals }) => {
     }
   });
 
-  console.log("The data is: ", data);
+  // console.log("(from Menu component) The data is: ", data);
 
   const sectionNames = useMemo( () => getUnrepeatedArray<string>(meals.map(({ section }) => section)), [meals]);
 

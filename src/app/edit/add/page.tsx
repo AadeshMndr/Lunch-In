@@ -9,7 +9,7 @@ const AddPage = () => {
       <Title colorScheme={"primary"} size={"lessThanLarge"}>
         Add New Dish
       </Title>
-      <MealForm meals={DUMMY_DATA} purpose="adding"/>
+      <MealForm meals={DUMMY_DATA} />
     </div>
   );
 };

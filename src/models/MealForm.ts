@@ -41,22 +41,7 @@ export const mealFormInputFieldSchema = z.object({
   category: z.enum(["food", "drinks"]),
   section: z.string().trim().min(1, "The dish must be assigned to a section."),
   price: z.union([QuantitativePriceSchema, PriceFormSchema]),
-  image: z.any().refine(
-    (value) => {
-      if (value instanceof FileList) {
-        if (value.length >= 1) {
-          const file = value[0];
-
-          const fileType = file.type.split("/")[0];
-
-          return fileType === "image";
-        }
-      }
-
-      return false;
-    },
-    { message: "Upload a valid image file !" }
-  ),
+  image: z.any()
 });
 
 export type MealFormInput = z.infer<typeof mealFormInputFieldSchema>;

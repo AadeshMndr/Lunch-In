@@ -11,11 +11,11 @@ export default async function Home() {
 
   return (
    <>
-    <section className="w-full block h-[60vh] overflow-hidden">
-      <Image src={BackgroundImage} alt="lunchin poster" className="w-full h-screen z-10 absolute top-0 left-0"/>
+    <section className="w-full block mobile:h-[50vh] pc:h-[70vh] overflow-hidden">
+      <Image src={BackgroundImage} alt="lunchin poster" className="w-full mobile:h-[80vh] pc:h-screen z-10 absolute top-0 left-0"/>
       <TitleCard />
     </section>
-    <section className="mx-auto w-3/4">
+    <section className="mx-auto w-3/4 mt-14">
       <Title size={"large"} spaceScheme={"spaceBelow"}>Welcome to Lunch In !</Title>
       <p className="font-cursive text-3xl text-center">{`"Pickup your tasty meal kerbside or take your time enjoying our service."`}</p>
     </section>

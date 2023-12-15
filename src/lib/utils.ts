@@ -93,3 +93,17 @@ export const convertToStringObject = (obj: number | object) => {
 
   return newObj;
 }
+
+export const imageFileValidator = (value: any) => {
+  if (value instanceof FileList) {
+    if (value.length >= 1) {
+      const file = value[0];
+
+      const fileType = file.type.split("/")[0];
+
+      return fileType === "image";
+    }
+  }
+
+  return false;
+}
