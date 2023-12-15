@@ -29,6 +29,6 @@ export const POST = async (req: NextRequest, { params }: IRouteProps) => {
             return new NextResponse("Don't send a request here from POSTMAN!", { status: 401 });
         } 
 
-        return new NextRequest("The DB failed to replace the data !");
+        return new NextResponse("The DB failed to replace the data !", { status: 400 });
     }   
 }
