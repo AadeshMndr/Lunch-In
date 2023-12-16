@@ -12,6 +12,8 @@ interface PageProps {
   searchParams: {};
 }
 
+export const dynamic = "force-dynamic";
+
 const FormPage = async ({ params }: PageProps) => {
   const meal = await executeInDB<MealFormInput>(async (db) => {
     const collection = db.collection("meals");
