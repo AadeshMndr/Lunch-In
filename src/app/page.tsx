@@ -7,6 +7,8 @@ import MealSlider from "@/components/Homepage/MealSection/MealSlider";
 
 import BackgroundImage from "@/assets/LunchInPoster.png";
 
+//Optimistic Updating is remaining in edit : change meal part, then use actual data rather then dummy data in menu and manage viewing the specific data in the top of the menu page when working with actual data, cause for some reason it didn't work in temporary implementation.
+
 export default async function Home() {
 
   return (

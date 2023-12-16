@@ -34,6 +34,8 @@ const Menu: React.FC<Props> = ({ meals }) => {
     }
   });
 
+  // meals = data || meals; temporary 
+
   // console.log("(from Menu component) The data is: ", data);
 
   const sectionNames = useMemo( () => getUnrepeatedArray<string>(meals.map(({ section }) => section)), [meals]);
@@ -50,7 +52,7 @@ const Menu: React.FC<Props> = ({ meals }) => {
           <ItemSection
             key={sectionName}
             meals={meals.filter(
-              (meal) => meal.category === "food" && meal.section === sectionName
+              (meal) => meal.category === "food" && meal.section.trim().toLocaleUpperCase() === sectionName.trim().toLocaleUpperCase()
             )}
           />
         ))}

@@ -3,6 +3,7 @@ import { ZodError } from "zod";
 
 import { executeInDB } from "@/lib/db";
 import { Meal, MealSchema, ArrayOfMealsSchema } from "@/models/Meal";
+import { ArrayOfStringsSchema } from "@/models/utils";
 
 export const POST = async (req: NextRequest) => {   
     const body = await req.json();
@@ -60,4 +61,34 @@ export const GET = async (req: NextRequest) => {
 
         return new NextResponse("Some error occured");
     }
+}
+
+export const DELETE = async (req: NextRequest) => {
+    const body = await req.json();
+
+    if (body && "passcode" in body && body.passcode === "passcode-bidek" && "data" in body){
+
+        try{
+
+            const parsedData = ArrayOfStringsSchema.parse(body.data);
+
+            await executeInDB( async (db) => {
+                const collection = db.collection("meals");
+
+                await Promise.all(parsedData.map( (id) => collection.deleteOne({ id })));
+            })
+
+            return new NextResponse("Deletion Successfull!");
+        } catch (error){
+
+            if (error instanceof ZodError){
+                return new NextResponse("Please Don't use Postman or Postman like apps to send request to this api !", { status: 401 });
+            }
+
+            return new NextResponse("Some error occured in the API", { status: 400 });
+        }
+    } else {
+        return new NextResponse("You cannot access this part of the API from outside the webapp!", { status: 401 })
+    }
+
 }

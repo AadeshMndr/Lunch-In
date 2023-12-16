@@ -16,7 +16,7 @@ const SectionHeader: React.FC<Props> = ({ text, classNameForInnerDiv="", classNa
   return (
     <div className={twMerge("w-full mt-5 flex justify-between gap-1", classNameForOuterDiv)}>
       <div className={twMerge("flex-1 h-[2px] bg-black translate-y-4", classNameForInnerDiv)}></div>
-      <Title size={"medium"} className={twMerge("bg-transparent w-max mx-auto", classNameForTitle)}>
+      <Title size={"medium"} className={twMerge("bg-transparent w-max mx-auto first-letter:capitalize", classNameForTitle)}>
         { text }
       </Title>
       <div className={twMerge("flex-1 h-[2px] bg-black translate-y-4", classNameForInnerDiv)}></div>

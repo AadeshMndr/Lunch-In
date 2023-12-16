@@ -5,7 +5,7 @@ const ChangeMealPage = () => {
   return (
     <div className="w-full pt-10">
         <Title size={"lessThanLarge"} colorScheme={"primary"} spaceScheme={"spaceBelow"}>Current Dishes</Title>
-      <AvailableMeals />
+      <AvailableMeals mode="edit"/>
     </div>
   );
 };

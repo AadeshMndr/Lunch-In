@@ -29,7 +29,7 @@ const MealItem: React.FC<Props> = ({ meal }) => {
           objectFit="cover"
         />
       </div>
-      <div className="text-xl text-primaryBrown tracking-wide first-letter:capitalize font-bubblegum font-bold">{`${meal.section}: ${meal.name}`}</div>
+      <div className="p-2 text-xl text-primaryBrown tracking-wide first-letter:capitalize font-bubblegum font-bold">{`${meal.section}: ${meal.name}`}</div>
     </div>
   );
 };

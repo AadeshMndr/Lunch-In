@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { nanoid } from "nanoid";
 
+import { queryClient } from "@/lib/tanstack";
 import {
   Meal,
   keyArray,
@@ -36,8 +37,6 @@ interface Props {
   meals: Meal[];
   defaultValues?: MealFormInput;
 }
-
-//When ever we edit the form the fields are still untouched so Invalid input errors arises deal with it.
 
 const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
   const [choosenKeys, setChoosenKeys] = useState<PriceKey[]>(
@@ -160,9 +159,8 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
 
           mutate(parsedData.data);
 
-          toast.success("Meal Submission Successfull !");
+          toast.success("The Dish got added!");
 
-          //do optimistic updating over here.....later....
           router.push("/menu");
         }
 
@@ -171,7 +169,7 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
     console.log("Error");
   };
 
-  const { mutate } = useMutation({
+  const { mutate } = useMutation<any, any, Meal, Meal[]>({
     mutationFn: async (data: Meal) => {
       const response = await fetch("/api/meal", {
         method: "POST",
@@ -186,7 +184,25 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
 
         return;
       }
+
+      return;
     },
+    onMutate: async (data) => {
+      await queryClient.cancelQueries({ queryKey: ["meals"] });
+
+      const cacheData = queryClient.getQueryData<Meal[]>(["meals"]) || [];
+
+      queryClient.setQueryData(["meals"], [...cacheData, data]);
+
+      return cacheData;
+    },
+    onError: async (error, variables, context) => {
+      queryClient.setQueryData(["meals"], context);
+      return;
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["meals"] });
+    }
   });
 
   return (
