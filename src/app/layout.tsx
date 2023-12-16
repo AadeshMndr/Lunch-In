@@ -39,7 +39,7 @@ export default async function RootLayout({
           return actualData;
         });
 
-        const parsedData = ArrayOfMealsSchema.parse(data);
+        const parsedData = ArrayOfMealsSchema.parse(data).sort((a, b) => a.section.localeCompare(b.section));
 
         return parsedData;
       } catch (error) {

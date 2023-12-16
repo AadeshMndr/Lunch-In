@@ -47,7 +47,7 @@ export const GET = async (req: NextRequest) => {
             return (actualData);
         });
 
-        const parsedData = ArrayOfMealsSchema.parse(data);
+        const parsedData = ArrayOfMealsSchema.parse(data).sort((a, b) => a.section.localeCompare(b.section));
 
         return new NextResponse(JSON.stringify(parsedData));
 
