@@ -7,38 +7,35 @@ import SectionHeader from "../UI/SectionHeader";
 import ItemSection from "./ItemSection";
 import { Meal } from "@/models/Meal";
 
-
 import { getUnrepeatedArray } from "@/lib/utils";
 
 interface Props {
   meals: Meal[];
 }
 
-
 const Menu: React.FC<Props> = ({ meals }) => {
-
   const { data } = useQuery<Meal[]>({
     queryKey: ["meals"],
     queryFn: async () => {
       const response = await fetch("/api/meal");
 
-      if (!response.ok){
+      if (!response.ok) {
         console.log("Some Error occured!");
 
-        return;
+        return [];
       }
 
-      const data = await response.json();
+      const data: Meal[] = await response.json();
 
       return data;
-    }
+    },
   });
 
-  // meals = data || meals; temporary 
-
-  // console.log("(from Menu component) The data is: ", data);
-
-  const sectionNames = useMemo( () => getUnrepeatedArray<string>(meals.map(({ section }) => section)), [meals]);
+  const sectionNames = useMemo(
+    () =>
+      getUnrepeatedArray<string>((data || meals).map(({ section }) => section)),
+    [data, meals]
+  );
 
   return (
     <div>
@@ -51,8 +48,11 @@ const Menu: React.FC<Props> = ({ meals }) => {
         {sectionNames.map((sectionName) => (
           <ItemSection
             key={sectionName}
-            meals={meals.filter(
-              (meal) => meal.category === "food" && meal.section.trim().toLocaleUpperCase() === sectionName.trim().toLocaleUpperCase()
+            meals={(data || meals).filter(
+              (meal) =>
+                meal.category === "food" &&
+                meal.section.trim().toLocaleUpperCase() ===
+                  sectionName.trim().toLocaleUpperCase()
             )}
           />
         ))}
@@ -62,12 +62,13 @@ const Menu: React.FC<Props> = ({ meals }) => {
         classNameForTitle="text-primaryOrange"
         classNameForInnerDiv="bg-primaryOrange"
       />
-       <div className="pc:grid pc:grid-cols-3 pc:gap-3 mobile:flex mobile:flex-wrap w-full max-h-[500px] overflow-auto justify-evenly">
+      <div className="pc:grid pc:grid-cols-3 pc:gap-3 mobile:flex mobile:flex-wrap w-full max-h-[500px] overflow-auto justify-evenly">
         {sectionNames.map((sectionName) => (
           <ItemSection
             key={sectionName}
-            meals={meals.filter(
-              (meal) => meal.category === "drinks" && meal.section === sectionName
+            meals={(data || meals).filter(
+              (meal) =>
+                meal.category === "drinks" && meal.section === sectionName
             )}
           />
         ))}

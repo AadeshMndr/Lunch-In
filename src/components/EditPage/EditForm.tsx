@@ -12,8 +12,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-import { nanoid } from "nanoid";
 
+import { queryClient } from "@/lib/tanstack";
 import {
   Meal,
   keyArray,
@@ -30,7 +30,6 @@ import {
   getUnrepeatedArray,
   readAsDataURLAsync,
   convertToNumberObject,
-  imageFileValidator,
 } from "@/lib/utils";
 import BranchableInput from "../UI/BranchableInput";
 import Button from "../UI/Button";
@@ -44,8 +43,9 @@ interface Props {
 
 const EditForm: React.FC<Props> = ({ meals, defaultValues, originalID }) => {
   const [choosenKeys, setChoosenKeys] = useState<PriceKey[]>(
-    typeof defaultValues.price === "string" ? [] :
-    Object.keys(defaultValues.price) as PriceKey[]
+    typeof defaultValues.price === "string"
+      ? []
+      : (Object.keys(defaultValues.price) as PriceKey[])
   );
 
   const [changeImage, setChangeImage] = useState<boolean>(false);
@@ -169,7 +169,6 @@ const EditForm: React.FC<Props> = ({ meals, defaultValues, originalID }) => {
         });
 
         meal.price = watchedPrice;
-        
       } else {
         console.log("The form still has errors !", errors);
 
@@ -181,7 +180,7 @@ const EditForm: React.FC<Props> = ({ meals, defaultValues, originalID }) => {
     let watchedPrice = new Object();
 
     choosenKeys.forEach((key) => {
-        (watchedPrice as any)[key] = watch(`price.${key}`);
+      (watchedPrice as any)[key] = watch(`price.${key}`);
     });
 
     meal.price = watchedPrice;
@@ -214,8 +213,8 @@ const EditForm: React.FC<Props> = ({ meals, defaultValues, originalID }) => {
     console.log("Error");
   };
 
-  const { mutate } = useMutation({
-    mutationFn: async (data: Meal) => {
+  const { mutate } = useMutation<any, any, Meal, Meal[]>({
+    mutationFn: async (data) => {
       const response = await fetch(`/api/meal/${data.id}`, {
         method: "POST",
         body: JSON.stringify(data),
@@ -230,6 +229,30 @@ const EditForm: React.FC<Props> = ({ meals, defaultValues, originalID }) => {
         return;
       }
     },
+    onMutate: async (data) => {
+      await queryClient.cancelQueries({ queryKey: ["meals"] });
+
+      const cacheData = queryClient.getQueryData<Meal[]>([["meals"]]) || [];
+
+      queryClient.setQueryData(
+        ["meals"],
+        cacheData.map((meal) => {
+          if (meal.id === data.id) {
+            return data;
+          } else {
+            return meal;
+          }
+        })
+      );
+
+      return cacheData;
+    },
+    onError: (error, variables, context) => {
+      queryClient.setQueryData(["meals"], context);
+    }, 
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["meals"] });
+    }
   });
 
   return (
@@ -381,7 +404,10 @@ const EditForm: React.FC<Props> = ({ meals, defaultValues, originalID }) => {
                       key as keyof typeof defaultValues.price
                     ] !== "string" &&
                     defaultValues.price[key as keyof typeof defaultValues.price]
-                      ? "full" in defaultValues.price[key as keyof typeof defaultValues.price]
+                      ? "full" in
+                        defaultValues.price[
+                          key as keyof typeof defaultValues.price
+                        ]
                       : false
                   }
                 />
