@@ -45,7 +45,7 @@ const FormPage = async ({ params }: PageProps) => {
       <Title colorScheme={"primary"} size={"lessThanLarge"}>
         { `Edit ${meal.name}` }
       </Title>
-      <EditForm meals={[]} defaultValues={meal} originalID={params.mealId}/>
+      <EditForm defaultValues={meal} originalID={params.mealId}/>
     </div>
   );
 };

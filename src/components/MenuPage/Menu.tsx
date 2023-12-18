@@ -2,7 +2,9 @@
 
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Search } from "lucide-react";
 
+import useSearch from '@/hooks/search';
 import SectionHeader from "../UI/SectionHeader";
 import ItemSection from "./ItemSection";
 import { Meal } from "@/models/Meal";
@@ -10,10 +12,9 @@ import { Meal } from "@/models/Meal";
 import { getUnrepeatedArray } from "@/lib/utils";
 
 interface Props {
-  meals: Meal[];
 }
 
-const Menu: React.FC<Props> = ({ meals }) => {
+const Menu: React.FC<Props> = () => {
   const { data } = useQuery<Meal[]>({
     queryKey: ["meals"],
     queryFn: async () => {
@@ -31,13 +32,33 @@ const Menu: React.FC<Props> = ({ meals }) => {
     },
   });
 
+  const searchKeys: (keyof Meal)[] = useMemo(
+    () => ["name", "section", "category", "description"],
+    []
+  );
+
+  const { filteredList, search } = useSearch<Meal>(data || [], searchKeys);
+
   const sectionNames = useMemo(
     () =>
-      getUnrepeatedArray<string>((data || meals).map(({ section }) => section)),
-    [data, meals]
+      getUnrepeatedArray<string>((filteredList).map(({ section }) => section)),
+    [filteredList]
   );
 
   return (
+    <>
+    <div className="flex flex-row items-center w-full mb-5">
+            <input
+              type="text"
+              className="flex-1 mx-2 rounded-md p-2 focus:outline-none bg-orange-200 leading-6 text-orange-950 font-semibold"
+              onChange={(event) => search(event.target.value)}
+            />
+            <Search
+              width={30}
+              height={30}
+              className="text-primaryOrange active:scale-95"
+            />
+          </div>
     <div>
       <SectionHeader
         text={"Foods Section"}
@@ -48,7 +69,7 @@ const Menu: React.FC<Props> = ({ meals }) => {
         {sectionNames.map((sectionName) => (
           <ItemSection
             key={sectionName}
-            meals={(data || meals).filter(
+            meals={(filteredList).filter(
               (meal) =>
                 meal.category === "food" &&
                 meal.section.trim().toLocaleUpperCase() ===
@@ -66,14 +87,14 @@ const Menu: React.FC<Props> = ({ meals }) => {
         {sectionNames.map((sectionName) => (
           <ItemSection
             key={sectionName}
-            meals={(data || meals).filter(
+            meals={(filteredList).filter(
               (meal) =>
                 meal.category === "drinks" && meal.section === sectionName
             )}
           />
         ))}
       </div>
-    </div>
+    </div></>
   );
 };
 

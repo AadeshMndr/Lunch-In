@@ -58,7 +58,7 @@ const MenuPage = async ({ searchParams: { mealId } }: PageProps) => {
         </section>
       )}
       <section>
-        <Menu meals={mealData} />
+        <Menu />
       </section>
       <section>
         Having trouble deciding your meal, take a look at some recommendations.

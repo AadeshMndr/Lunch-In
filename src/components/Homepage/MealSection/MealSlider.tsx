@@ -2,12 +2,13 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { motion, useAnimate } from "framer-motion";
 import { Salad } from "lucide-react";
 
 import MealBox from "./MealBox";
 import { useWindowDimension } from "@/hooks/dimension";
-import { DUMMY_DATA } from "@/models/Meal";
+import { Meal } from "@/models/Meal";
 
 interface Props {}
 
@@ -16,6 +17,23 @@ const MealSlider: React.FC<Props> = () => {
 
   const { width } = useWindowDimension();
   const isMobile = useMemo(() => width < 500, [width]);
+
+  const { data } = useQuery<Meal[]>({
+    queryKey: ["meals"],
+    queryFn: async () => {
+      const response = await fetch("/api/meal");
+
+      if (!response.ok) {
+        console.log("Some Error occured!");
+
+        return [];
+      }
+
+      const data: Meal[] = await response.json();
+
+      return data;
+    },
+  });
 
   const [scope, animate] = useAnimate<HTMLDivElement>();
 
@@ -109,16 +127,22 @@ const MealSlider: React.FC<Props> = () => {
         }
       }}
     >
-      {DUMMY_DATA.slice(0, 5).map((meal, index) => (
-        <MealBox
-          meal={{ ...meal }}
-          key={meal.id}
-          index={index}
-          selectCard={selectCard}
-          scrollAreaWidth={width}
-          isMobile={isMobile}
-        />
-      ))}
+      {data === undefined ? (
+        <div className="w-full p-4">Loading Dishes ...</div>
+      ) : (
+        data
+          .slice(0, 5)
+          .map((meal, index) => (
+            <MealBox
+              meal={{ ...meal }}
+              key={meal.id}
+              index={index}
+              selectCard={selectCard}
+              scrollAreaWidth={width}
+              isMobile={isMobile}
+            />
+          ))
+      )}
       <motion.div
         whileHover={
           isMobile
@@ -128,11 +152,15 @@ const MealSlider: React.FC<Props> = () => {
                 boxShadow: "0px 0px 10px black",
               }
         }
-        whileTap={isMobile ? {
-          scale: 1.15,
-          boxShadow: "0px 0px 10px black",
-          transition: { duration: 0.1 }
-        }: {}}
+        whileTap={
+          isMobile
+            ? {
+                scale: 1.15,
+                boxShadow: "0px 0px 10px black",
+                transition: { duration: 0.1 },
+              }
+            : {}
+        }
         transition={{ stiffness: 100 }}
         initial={{ x: -5 * 75 }}
         onClick={goToTheMenuPage}

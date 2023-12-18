@@ -11,7 +11,7 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { queryClient } from "@/lib/tanstack";
 import {
@@ -36,12 +36,11 @@ import Button from "../UI/Button";
 import ErronousP from "../UI/ErronousP";
 
 interface Props {
-  meals: Meal[];
   defaultValues: MealFormInput;
   originalID: string;
 }
 
-const EditForm: React.FC<Props> = ({ meals, defaultValues, originalID }) => {
+const EditForm: React.FC<Props> = ({ defaultValues, originalID }) => {
   const [choosenKeys, setChoosenKeys] = useState<PriceKey[]>(
     typeof defaultValues.price === "string"
       ? []
@@ -56,6 +55,23 @@ const EditForm: React.FC<Props> = ({ meals, defaultValues, originalID }) => {
   const [preview, setPreview] = useState<
     string | ArrayBuffer | null | undefined
   >(defaultValues.image);
+
+  const { data: meals } = useQuery<Meal[]>({
+    queryKey: ["meals"],
+    queryFn: async () => {
+      const response = await fetch("/api/meal");
+
+      if (!response.ok) {
+        console.log("Some Error occured!");
+
+        return [];
+      }
+
+      const data: Meal[] = await response.json();
+
+      return data;
+    },
+  });
 
   useEffect(() => {
     if (changeImage) {
@@ -103,7 +119,7 @@ const EditForm: React.FC<Props> = ({ meals, defaultValues, originalID }) => {
   };
 
   const sectionsList = getUnrepeatedArray<string>(
-    meals
+    (meals || [])
       .filter(({ category }) =>
         watch("category") ? category === watch("category") : true
       )

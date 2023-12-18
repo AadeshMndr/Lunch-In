@@ -11,7 +11,7 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { nanoid } from "nanoid";
 
 import { queryClient } from "@/lib/tanstack";
@@ -34,14 +34,30 @@ import Button from "../UI/Button";
 import ErronousP from "../UI/ErronousP";
 
 interface Props {
-  meals: Meal[];
   defaultValues?: MealFormInput;
 }
 
-const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
+const MealForm: React.FC<Props> = ({ defaultValues }) => {
   const [choosenKeys, setChoosenKeys] = useState<PriceKey[]>(
     defaultValues ? (Object.keys(defaultValues.price) as PriceKey[]) : []
   );
+
+  const { data: meals } = useQuery<Meal[]>({
+    queryKey: ["meals"],
+    queryFn: async () => {
+      const response = await fetch("/api/meal");
+
+      if (!response.ok) {
+        console.log("Some Error occured!");
+
+        return [];
+      }
+
+      const data: Meal[] = await response.json();
+
+      return data;
+    },
+  });
 
   const [preview, setPreview] = useState<
     string | ArrayBuffer | null | undefined
@@ -84,7 +100,7 @@ const MealForm: React.FC<Props> = ({ meals, defaultValues }) => {
   };
 
   const sectionsList = getUnrepeatedArray<string>(
-    meals
+    (meals || [])
       .filter(({ category }) =>
         watch("category") ? category === watch("category") : true
       )

@@ -91,143 +91,143 @@ export class MealClass {
   ) {}
 }
 
-export const picture = dummyImage;
+// export const picture = dummyImage;
 
-export const DUMMY_DATA = [
-  {
-    ...new MealClass(
-      "Somedish-1",
-      "A good food",
-      34,
-      picture,
-      "food",
-      "momo",
-      "1"
-    ),
-  },
-  {
-    ...new MealClass(
-      "Somedish-2",
-      "A good food, fills your stomach and is healthy as well",
-      { buff: 150, chicken: 145, veg: 120 },
-      picture,
-      "food",
-      "momo",
-      "2"
-    ),
-  },
-  {
-    ...new MealClass(
-      "Somedish-3",
-      "A good food",
-      {
-        veg: 200,
-        buff: { half: 130, full: 260 },
-        pork: { half: 80, full: 120 },
-      },
-      picture,
-      "food",
-      "sandwich",
-      "3"
-    ),
-  },
-  {
-    ...new MealClass(
-      "Somedish-4",
-      "A good food",
-      74,
-      picture,
-      "food",
-      "pizza",
-      "4"
-    ),
-  },
-  {
-    ...new MealClass(
-      "Somedish-5",
-      "A good food",
-      { veg: 120, nonVeg: 200 },
-      picture,
-      "food",
-      "chowmein",
-      "5"
-    ),
-  },
-  {
-    ...new MealClass(
-      "Somedish-6",
-      "A good food",
-      { veg: 56, nonVeg: { half: 78, full: 120 } },
-      picture,
-      "drinks",
-      "hot drinks",
-      "6"
-    ),
-  },
-  {
-    ...new MealClass(
-      "Somedish-7",
-      "A good food",
-      14,
-      picture,
-      "drinks",
-      "cold drinks",
-      "7"
-    ),
-  },
-  {
-    ...new MealClass(
-      "Somedish-8",
-      "A good food",
-      64,
-      picture,
-      "food",
-      "thukpa",
-      "8"
-    ),
-  },
-  {
-    ...new MealClass(
-      "Somedish-9",
-      "A good food",
-      { half: 64, full: 120 },
-      picture,
-      "food",
-      "fried rice",
-      "9"
-    ),
-  },
-  {
-    ...new MealClass(
-      "Somedish-10",
-      "A good food",
-      64,
-      picture,
-      "food",
-      "fried rice",
-      "10"
-    ),
-  },
-  {
-    ...new MealClass(
-      "Somedish-11",
-      "A good food",
-      64,
-      picture,
-      "food",
-      "snacks",
-      "11"
-    ),
-  },
-  {
-    ...new MealClass(
-      "Somedish-12",
-      "A good food",
-      { pork: 256, chicken: 129, veg: 120, mutton: 450 },
-      picture,
-      "food",
-      "chowmein",
-      "12"
-    ),
-  },
-];
+// export const DUMMY_DATA = [
+//   {
+//     ...new MealClass(
+//       "Somedish-1",
+//       "A good food",
+//       34,
+//       picture,
+//       "food",
+//       "momo",
+//       "1"
+//     ),
+//   },
+//   {
+//     ...new MealClass(
+//       "Somedish-2",
+//       "A good food, fills your stomach and is healthy as well",
+//       { buff: 150, chicken: 145, veg: 120 },
+//       picture,
+//       "food",
+//       "momo",
+//       "2"
+//     ),
+//   },
+//   {
+//     ...new MealClass(
+//       "Somedish-3",
+//       "A good food",
+//       {
+//         veg: 200,
+//         buff: { half: 130, full: 260 },
+//         pork: { half: 80, full: 120 },
+//       },
+//       picture,
+//       "food",
+//       "sandwich",
+//       "3"
+//     ),
+//   },
+//   {
+//     ...new MealClass(
+//       "Somedish-4",
+//       "A good food",
+//       74,
+//       picture,
+//       "food",
+//       "pizza",
+//       "4"
+//     ),
+//   },
+//   {
+//     ...new MealClass(
+//       "Somedish-5",
+//       "A good food",
+//       { veg: 120, nonVeg: 200 },
+//       picture,
+//       "food",
+//       "chowmein",
+//       "5"
+//     ),
+//   },
+//   {
+//     ...new MealClass(
+//       "Somedish-6",
+//       "A good food",
+//       { veg: 56, nonVeg: { half: 78, full: 120 } },
+//       picture,
+//       "drinks",
+//       "hot drinks",
+//       "6"
+//     ),
+//   },
+//   {
+//     ...new MealClass(
+//       "Somedish-7",
+//       "A good food",
+//       14,
+//       picture,
+//       "drinks",
+//       "cold drinks",
+//       "7"
+//     ),
+//   },
+//   {
+//     ...new MealClass(
+//       "Somedish-8",
+//       "A good food",
+//       64,
+//       picture,
+//       "food",
+//       "thukpa",
+//       "8"
+//     ),
+//   },
+//   {
+//     ...new MealClass(
+//       "Somedish-9",
+//       "A good food",
+//       { half: 64, full: 120 },
+//       picture,
+//       "food",
+//       "fried rice",
+//       "9"
+//     ),
+//   },
+//   {
+//     ...new MealClass(
+//       "Somedish-10",
+//       "A good food",
+//       64,
+//       picture,
+//       "food",
+//       "fried rice",
+//       "10"
+//     ),
+//   },
+//   {
+//     ...new MealClass(
+//       "Somedish-11",
+//       "A good food",
+//       64,
+//       picture,
+//       "food",
+//       "snacks",
+//       "11"
+//     ),
+//   },
+//   {
+//     ...new MealClass(
+//       "Somedish-12",
+//       "A good food",
+//       { pork: 256, chicken: 129, veg: 120, mutton: 450 },
+//       picture,
+//       "food",
+//       "chowmein",
+//       "12"
+//     ),
+//   },
+// ];
