@@ -5,6 +5,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import AuthProvider from "@/components/Providers/auth";
 import ToastProvider from "@/components/Providers/toast";
 import QueryProvider from "@/components/Providers/tanstack";
+import ContextProvider from "@/components/Providers/context";
 import { queryClient } from "@/lib/tanstack";
 import { Meal, ArrayOfMealsSchema } from "@/models/Meal";
 import { executeInDB } from "@/lib/db";
@@ -39,7 +40,9 @@ export default async function RootLayout({
           return actualData;
         });
 
-        const parsedData = ArrayOfMealsSchema.parse(data).sort((a, b) => a.section.localeCompare(b.section));
+        const parsedData = ArrayOfMealsSchema.parse(data).sort((a, b) =>
+          a.section.localeCompare(b.section)
+        );
 
         return parsedData;
       } catch (error) {
@@ -56,11 +59,13 @@ export default async function RootLayout({
     <html lang="en">
       <body className="w-screen h-full relative bg-no-repeat bg-gradient-to-b from-primaryBrown from-[20%] to-[#af6e3f]">
         <AuthProvider>
-          <QueryProvider>
-            <HydrationBoundary state={dehydratedState}>
-              <ToastProvider>{children}</ToastProvider>
-            </HydrationBoundary>
-          </QueryProvider>
+          <ContextProvider>
+            <QueryProvider>
+              <HydrationBoundary state={dehydratedState}>
+                <ToastProvider>{children}</ToastProvider>
+              </HydrationBoundary>
+            </QueryProvider>
+          </ContextProvider>
         </AuthProvider>
       </body>
     </html>

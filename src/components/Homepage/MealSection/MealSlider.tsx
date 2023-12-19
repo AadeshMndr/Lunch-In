@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useContext, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { motion, useAnimate } from "framer-motion";
 import { Salad } from "lucide-react";
 
 import MealBox from "./MealBox";
+import { AppContext } from "@/components/Providers/context";
 import { useWindowDimension } from "@/hooks/dimension";
 import { Meal } from "@/models/Meal";
 
@@ -14,6 +15,8 @@ interface Props {}
 
 const MealSlider: React.FC<Props> = () => {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
+
+  const { cardShown, setCardShown } = useContext(AppContext);
 
   const { width } = useWindowDimension();
   const isMobile = useMemo(() => width < 500, [width]);
@@ -43,7 +46,7 @@ const MealSlider: React.FC<Props> = () => {
     router.push("/menu");
   };
 
-  const animateShowingCard = (index: number) => {
+  const animateShowingCard = useCallback((index: number) => {
     animate(
       `.MealWithIndex${index}`,
       {
@@ -63,9 +66,9 @@ const MealSlider: React.FC<Props> = () => {
       },
       { duration: 0.2 }
     );
-  };
+  }, []);
 
-  const animateHidingCard = (index: number) => {
+  const animateHidingCard = useCallback((index: number) => {
     animate(
       `.MealWithIndex${index}`,
       {
@@ -80,31 +83,56 @@ const MealSlider: React.FC<Props> = () => {
       },
       { duration: 0.2 }
     );
-  };
+  }, []);
 
   const selectCard = (index: number | null, id?: string) => {
-    setSelectedCard((prevState) => {
-      if (prevState === index) {
+    // setSelectedCard((prevState) => {
+    //   if (prevState === index) {
+    //     if (prevState !== null){
+    //       router.push(`/menu?mealId=${id}`);
+    //     }
+    //     return null;
+    //   } else {
+    //     if (index !== null) {
+    //       animateShowingCard(index);
+    //       if (prevState !== null) {
+    //         animateHidingCard(prevState);
+    //       }
+    //     } else {
+    //       if (prevState !== null) {
+    //         animateHidingCard(prevState);
+    //       }
+    //     }
+    //     return index;
+    //   }
+    // });
+
+    if (selectedCard === index && selectedCard !== null) {
+      router.push(`/menu?mealId=${id}`);
+      return;
+    }
+
+    if (selectedCard !== index) {
+      if (index !== null) {
+        setCardShown(true);
+        animateShowingCard(index);
         if (selectedCard !== null) {
-          setSelectedCard(null);
+          animateHidingCard(selectedCard);
         }
-        router.push(`/menu?mealId=${id}`);
-        return null;
+
+        setSelectedCard(index);
       } else {
-        if (index !== null) {
-          animateShowingCard(index);
-          if (prevState !== null) {
-            animateHidingCard(prevState);
-          }
-        } else {
-          if (prevState !== null) {
-            animateHidingCard(prevState);
-          }
-        }
-        return index;
+        setCardShown(false);
       }
-    });
+    }
   };
+
+  useEffect(() => {
+    if (!cardShown && selectedCard !== null) {
+      animateHidingCard(selectedCard);
+      setSelectedCard(null);
+    }
+  }, [cardShown, selectedCard]);
 
   return (
     <div

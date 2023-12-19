@@ -12,12 +12,12 @@ import BackgroundImage from "@/assets/LunchInPoster.png";
 
 //Right now the NavSide doesn't close once open, and also the menuSlider doesn'e close when clicked outside so maybe make a useContext to handle both of them. For this just use a context wrapper or make the context in the main home page because we are going to make the home page a client component/page anyway later when we use framer motion, thus make both the mealSlider view and the NavSide close when clicked outside.
 
-export default async function Home() {
+export default function Home() {
 
   return (
    <>
    <NavSide />
-    <section className="w-full block mobile:h-[50vh] pc:h-[70vh] overflow-hidden">
+    <section id="background-image" className="w-full block mobile:h-[50vh] pc:h-[70vh] overflow-hidden">
       <Image src={BackgroundImage} alt="lunchin poster" className="w-full mobile:h-[80vh] pc:h-screen z-10 absolute top-0 left-0"/>
       <TitleCard />
     </section>

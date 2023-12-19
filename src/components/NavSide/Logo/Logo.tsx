@@ -15,6 +15,7 @@ const Logo: React.FC<Props> = () => {
         className="w-20 h-20"
         layout="fill"
         objectFit="cover"
+        id="Logo"
       />
   );
 };
