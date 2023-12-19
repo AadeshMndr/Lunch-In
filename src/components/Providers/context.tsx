@@ -42,6 +42,8 @@ const ContextProvider: React.FC<Props> = ({ children }) => {
 
             if ("id" in rootContainer && rootContainer.id === "backdrop"){
               setOpen(false);
+               //Setting the card as NOT to be shown.
+              setCardShown(false);
             }
 
             
@@ -49,10 +51,12 @@ const ContextProvider: React.FC<Props> = ({ children }) => {
               if ("parentElement" in rootContainer){
                 rootContainer = rootContainer.parentElement as HTMLElement;
 
-                if (rootContainer.id === "NavSide"){
+                if (rootContainer.id === "NavSide" || rootContainer.id === "backdropSlider"){
                   break;
                 } else if (rootContainer.id === "backdrop"){
                   setOpen(false);
+                   //Setting the card as NOT to be shown.
+                  setCardShown(false);
                 }
               } else {
                 break;
@@ -60,10 +64,6 @@ const ContextProvider: React.FC<Props> = ({ children }) => {
             }
 
         } 
-        if (event.target.id === "backdrop"){
-            //Setting the card as NOT to be shown.
-            setCardShown(false);
-        }
     }
 
   }

@@ -16,6 +16,7 @@ const Logo: React.FC<Props> = () => {
         layout="fill"
         objectFit="cover"
         id="Logo"
+        priority={true}
       />
   );
 };

@@ -18,7 +18,7 @@ export default function Home() {
    <>
    <NavSide />
     <section id="background-image" className="w-full block mobile:h-[50vh] pc:h-[70vh] overflow-hidden">
-      <Image src={BackgroundImage} alt="lunchin poster" className="w-full mobile:h-[80vh] pc:h-screen z-10 absolute top-0 left-0"/>
+      <Image priority={true} src={BackgroundImage} alt="lunchin poster" className="w-full mobile:h-[80vh] pc:h-screen z-10 absolute top-0 left-0"/>
       <TitleCard />
     </section>
     <section className="mx-auto w-3/4 mt-14">

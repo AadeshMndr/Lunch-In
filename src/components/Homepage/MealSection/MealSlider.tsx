@@ -108,6 +108,7 @@ const MealSlider: React.FC<Props> = () => {
     // });
 
     if (selectedCard === index && selectedCard !== null) {
+      setCardShown(false);
       router.push(`/menu?mealId=${id}`);
       return;
     }
@@ -132,16 +133,16 @@ const MealSlider: React.FC<Props> = () => {
       animateHidingCard(selectedCard);
       setSelectedCard(null);
     }
-  }, [cardShown, selectedCard]);
+  }, [cardShown, selectedCard, animateHidingCard]);
 
   return (
     <div
-      id="backdrop"
+      id="backdropSlider"
       ref={scope}
       className="flex flex-row gap-x-3 w-3/4 mx-auto overflow-x-auto p-10"
       onClick={(event) => {
         if ("id" in event.target && isMobile) {
-          if (event.target.id === "backdrop") {
+          if (event.target.id === "backdropSlider") {
             selectCard(null);
           }
         }
