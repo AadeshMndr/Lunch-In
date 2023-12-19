@@ -66,7 +66,7 @@ const MealSlider: React.FC<Props> = () => {
       },
       { duration: 0.2 }
     );
-  }, []);
+  }, [animate, width]);
 
   const animateHidingCard = useCallback((index: number) => {
     animate(
@@ -83,7 +83,7 @@ const MealSlider: React.FC<Props> = () => {
       },
       { duration: 0.2 }
     );
-  }, []);
+  }, [animate, width]);
 
   const selectCard = (index: number | null, id?: string) => {
     // setSelectedCard((prevState) => {
@@ -108,7 +108,7 @@ const MealSlider: React.FC<Props> = () => {
     // });
 
     if (selectedCard === index && selectedCard !== null) {
-      setCardShown(false);
+      setCardShown(false); //might want to comment this line out because this does nothing actually (tested!)
       router.push(`/menu?mealId=${id}`);
       return;
     }
