@@ -5,6 +5,52 @@
 @tailwind components;
 @tailwind utilities;
 
+.custom-shape-divider-bottom-1703067560 {
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.custom-shape-divider-bottom-1703067560 svg {
+  position: relative;
+  display: block;
+  width: calc(211% + 1.3px);
+  height: 500px;
+}
+
+.custom-shape-divider-bottom-1703067560 .shape-fill {
+  fill: #D5A989;
+}
+
+
+
+
+
+.custom-shape-divider-top-1703073171 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.custom-shape-divider-top-1703073171 svg {
+  position: relative;
+  display: block;
+  width: calc(124% + 1.3px);
+  height: 251px;
+}
+
+.custom-shape-divider-top-1703073171 .shape-fill {
+  fill: #D5A989;
+}
+
+
+
+
+
 
 ::-webkit-scrollbar {
   width: 2px;
