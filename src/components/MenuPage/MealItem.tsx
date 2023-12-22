@@ -23,8 +23,8 @@ const MealItem: React.FC<Props> = ({ meal: { image, name, price, id } }) => {
     if ("id" in event.target){
 
       if(event.target.id === "clickable"){
-        router.push(`/menu?mealId=${id}`);
-        // setSelectedMeal(id);
+        // router.push(`/menu?mealId=${id}`);
+        setSelectedMeal(id);
       }
     }
 

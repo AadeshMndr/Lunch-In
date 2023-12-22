@@ -1,9 +1,11 @@
 "use client";
 
+import { useContext } from "react";
 import Image from "next/legacy/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
+import { AppContext } from "@/components/Providers/context";
 import { Meal } from "@/models/Meal";
 
 interface Props {
@@ -17,8 +19,11 @@ interface Props {
 const MealBox: React.FC<Props> = ({ meal: { name, image, id }, index, selectCard, isMobile }) => {
   const router = useRouter();
 
+  const { setSelectedMeal } = useContext(AppContext);
+
   const goToSpecificMenu = () => {
-    router.push(`/menu?mealId=${id}`);
+    router.push("/menu");
+    setSelectedMeal(id);
   };
 
   const handleClickEvent = () => {

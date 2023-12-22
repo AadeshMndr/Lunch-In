@@ -6,14 +6,12 @@ import { Soup } from "lucide-react";
 
 interface PageProps {
   params: {};
-  searchParams: {
-    mealId: string;
-  };
+  searchParams: {};
 }
 
 export const dynamic = "force-dynamic";
 
-const MenuPage = async ({ searchParams: { mealId } }: PageProps) => {
+const MenuPage = async ({}: PageProps) => {
   const data = await executeInDB<Meal[]>(async (db) => {
     const collection = db.collection("meals");
 
@@ -50,13 +48,7 @@ const MenuPage = async ({ searchParams: { mealId } }: PageProps) => {
     </div>
   ) : (
     <div>
-      {mealId && mealData.some((meal) => meal.id === mealId) && (
-        <section>
-          <MealShowCase
-            meal={mealData.filter((meal) => meal.id === mealId)[0]}
-          />
-        </section>
-      )}
+      <MealShowCase meals={mealData} />
       <section>
         <Menu backupData={mealData} />
       </section>
