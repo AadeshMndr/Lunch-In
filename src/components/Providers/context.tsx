@@ -7,6 +7,8 @@ interface Context {
   setCardShown: Dispatch<SetStateAction<boolean>>;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  selectedMeal: string | null;
+  setSelectedMeal: Dispatch<SetStateAction<string | null>>;
 }
 
 export const AppContext = createContext<Context>({
@@ -14,6 +16,8 @@ export const AppContext = createContext<Context>({
   setCardShown: () => {},
   open: false,
   setOpen: () => {},
+  selectedMeal: null,
+  setSelectedMeal: () => {},
 });
 
 interface Props {
@@ -23,12 +27,15 @@ interface Props {
 const ContextProvider: React.FC<Props> = ({ children }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+  const [ selectedMeal, setSelectedMeal ] = useState<string | null>(null);
 
   const contextObj: Context = {
     cardShown,
     setCardShown,
     open,
     setOpen,
+    selectedMeal,
+    setSelectedMeal
   };
 
   const closeThings: MouseEventHandler<HTMLDivElement> = (event) => {

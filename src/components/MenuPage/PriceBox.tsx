@@ -33,7 +33,7 @@ const PriceBox: React.FC<Props> = ({ price }) => {
 
   if (typeof price === "number") {
     return (
-      <div className="text-primaryOrange font-semibold max-w-[70px]">
+      <div className="text-primaryOrange font-semibold max-w-[70px]" key={price}>
         Rs. {price}
       </div>
     );
@@ -50,7 +50,7 @@ const PriceBox: React.FC<Props> = ({ price }) => {
     typeof selectivePrice === "object"
   ) {
     return (
-      <div className="flex justify-normal items-center text-primaryOrange font-semibold text-center mx-2">
+      <div key={Math.random()} className="flex justify-normal items-center text-primaryOrange font-semibold text-center mx-2" >
         {typeof selectivePrice === "object" && (
           <AmountIcons quantity={quantity} toggleQuantity={toggleQuantity} />
         )}
@@ -86,7 +86,7 @@ const PriceBox: React.FC<Props> = ({ price }) => {
             </option>
           ))}
         </motion.select>
-        <div className="text-primaryOrange font-semibold">
+        <div className="text-primaryOrange font-semibold" key={selectivePrice}>
           Rs.{selectivePrice}
         </div>
       </div>
@@ -94,7 +94,7 @@ const PriceBox: React.FC<Props> = ({ price }) => {
   }
 
   return (
-    <div className="flex justify-normal items-center text-primaryOrange font-semibold text-center mx-2">
+    <div className="flex justify-normal items-center text-primaryOrange font-semibold text-center mx-2" key={Math.random()}>
       {typeof selectivePrice === "object" && (
         <AmountIcons quantity={quantity} toggleQuantity={toggleQuantity} />
       )}
@@ -147,7 +147,7 @@ const PriceBox: React.FC<Props> = ({ price }) => {
             );
           })}
         </motion.select>
-        <div className="text-primaryOrange font-semibold">
+        <div className="text-primaryOrange font-semibold" key={Math.random()}>
           Rs.{" "}
           {typeof selectivePrice === "number"
             ? selectivePrice

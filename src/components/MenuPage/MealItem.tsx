@@ -1,10 +1,11 @@
 "use client";
 
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useContext } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
+import { AppContext } from "../Providers/context";
 import PriceBox from "./PriceBox";
 import { Meal } from "@/models/Meal";
 
@@ -16,11 +17,14 @@ const MealItem: React.FC<Props> = ({ meal: { image, name, price, id } }) => {
   
   const router = useRouter();
 
+  const { setSelectedMeal } = useContext(AppContext);
+
   const selectTheMeal: MouseEventHandler<HTMLDivElement> = (event) => {
     if ("id" in event.target){
 
       if(event.target.id === "clickable"){
         router.push(`/menu?mealId=${id}`);
+        // setSelectedMeal(id);
       }
     }
 

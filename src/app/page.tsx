@@ -27,7 +27,7 @@ export default function Home() {
   const reverseScrollVariable = useTransform(
     scrollY,
     [0, 400, 700],
-    [0, width > 500 ? 700 : 600, 700]
+    [0, width > 500 ? 700 : 600, width > 500 ? 700 : 600]
   );
 
   const welcomeVariable = useTransform(
@@ -99,7 +99,7 @@ export default function Home() {
           <p className="z-40 font-cursive mobile:text-2xl pc:text-3xl text-center">{`"Pickup your tasty meal kerbside or take your time enjoying our service."`}</p>
         </motion.div>
       </motion.section>
-      <section className="block relative z-20">
+      <section className="block relative z-20 mobile:-translate-y-44">
         <Title
           size={"large"}
           spaceScheme={"spaceBelow"}

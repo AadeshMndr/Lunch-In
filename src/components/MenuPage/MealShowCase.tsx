@@ -10,6 +10,8 @@ interface Props {
 const MealShowCase: React.FC<Props> = ({
   meal: { image, name, description, price, section },
 }) => {
+
+
   return (
     <div className="w-full pc:flex pc:justify-center pc:items-center">
       <div className="mobile:w-fill pc:flex-1 h-60 relative rounded-md overflow-hidden mobile:mx-auto">

@@ -30,11 +30,20 @@ export const POST = async (req: NextRequest) => {
 
 
 export const GET = async (req: NextRequest) => {
+
+    //for vercel hobby build only
+    // console.log('request started! ');
+    // const timer = setTimeout( () => console.log("10 seconds have gone!"), 1000 * 10);
+
     try {
         const data = await executeInDB<Meal[]>(async (db) => {
             const collection = db.collection("meals");
 
+            // console.log("Asking the DB for data!");
+            
             const data = (await (await collection.find()).toArray());
+
+            // console.log("Got the data!");
 
             const actualData = data.map( (item) => {
                 let copyOfItem: any = item;
@@ -48,7 +57,14 @@ export const GET = async (req: NextRequest) => {
             return (actualData);
         });
 
+        // console.log("Sending the data for parsing!");
+
         const parsedData = ArrayOfMealsSchema.parse(data).sort((a, b) => a.section.localeCompare(b.section));
+
+        // console.log("Data is parsed!");
+
+        // console.log("request complete!");
+        // clearTimeout(timer);
 
         return new NextResponse(JSON.stringify(parsedData));
 

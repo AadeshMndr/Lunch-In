@@ -7,7 +7,7 @@ import {
   useTransform,
   AnimatePresence,
 } from "framer-motion";
-import { ChevronLeft, Soup } from "lucide-react";
+import { ChevronLeft, Soup, UserCircle } from "lucide-react";
 
 import { AppContext } from "../Providers/context";
 import { useWindowDimension } from "@/hooks/dimension";
@@ -70,6 +70,13 @@ const NavSide: React.FC<Props> = () => {
                 <Soup width={30} height={30} />
               }
               text="Menu"
+            />
+            <NavElem
+              href="/review"
+              Icon={
+                <UserCircle width={30} height={30} />
+              }
+              text="Reviews"
             />
           </motion.div>
         ) : (

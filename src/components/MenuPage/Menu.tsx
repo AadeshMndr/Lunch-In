@@ -12,9 +12,10 @@ import { Meal } from "@/models/Meal";
 import { getUnrepeatedArray } from "@/lib/utils";
 
 interface Props {
+  backupData: Meal[]
 }
 
-const Menu: React.FC<Props> = () => {
+const Menu: React.FC<Props> = ({ backupData }) => {
   const { data } = useQuery<Meal[]>({
     queryKey: ["meals"],
     queryFn: async () => {
@@ -23,7 +24,7 @@ const Menu: React.FC<Props> = () => {
       if (!response.ok) {
         console.log("Some Error occured!");
 
-        return [];
+        return backupData || [];
       }
 
       const data: Meal[] = await response.json();
@@ -47,7 +48,7 @@ const Menu: React.FC<Props> = () => {
 
   return (
     <>
-    <div className="flex flex-row items-center w-full mb-5">
+    <div className="flex flex-row items-center w-full mb-5 pc:mt-5">
             <input
               type="text"
               className="flex-1 mx-2 rounded-md p-2 focus:outline-none bg-orange-200 leading-6 text-orange-950 font-semibold"
