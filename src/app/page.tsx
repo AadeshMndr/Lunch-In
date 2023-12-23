@@ -21,7 +21,7 @@ export default function Home() {
   const scrollVariable = useTransform(
     scrollY,
     [0, 100],
-    [0, width > 500 ? -210 : -200]
+    [0, width > 500 ? -280 : -200]
   );
 
   const reverseScrollVariable = useTransform(
@@ -39,14 +39,18 @@ export default function Home() {
   const topShadeVariable = useTransform(
     scrollY,
     [0, 200],
-    [-400, width > 500 ? 255 : 153]
+    [-400, width > 500 ? 320 : 270]
   );
+
+  const topShadeWidth = useTransform(scrollY, [0, 200], [0, width > 500 ? 1 : 1.3]);
+
+  const opacityValue = useTransform(scrollY, [0, 100, 200], [1, 1, 0]);
 
   return (
     <div className="bg-gradient-to-b from-primaryBrown to-[#af6e3f] from-50%">
       <NavSide />
       <motion.div
-        style={{ translateY: topShadeVariable, rotate: "180deg" }}
+        style={{ translateY: topShadeVariable, rotate: "180deg", scaleX: topShadeWidth }}
         className="custom-shape-divider-top-1703073171 z-20"
       >
         <svg
@@ -72,7 +76,7 @@ export default function Home() {
           alt="lunchin poster"
           className="w-full mobile:h-[80vh] pc:h-screen absolute top-0 left-0"
         />
-        <TitleCard scrollValue={reverseScrollVariable} />
+        <TitleCard scrollValue={reverseScrollVariable} opacityValue={opacityValue}/>
       </motion.section>
       <motion.section
         style={{ translateY: scrollVariable }}

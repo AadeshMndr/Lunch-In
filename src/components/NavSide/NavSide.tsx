@@ -1,13 +1,13 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import {
   motion,
   useScroll,
   useTransform,
   AnimatePresence,
 } from "framer-motion";
-import { ChevronLeft, Soup, UserCircle } from "lucide-react";
+import { ChevronLeft, Soup, UserCircle, FileSignature, Map, Users } from "lucide-react";
 
 import { AppContext } from "../Providers/context";
 import { useWindowDimension } from "@/hooks/dimension";
@@ -18,6 +18,7 @@ interface Props {}
 
 const NavSide: React.FC<Props> = () => {
   const { open, setOpen } = useContext(AppContext);
+  const [adminOptions, setAdminOptions] = useState<boolean>(false);
 
   const { scrollY } = useScroll();
   const { height, width } = useWindowDimension();
@@ -40,7 +41,7 @@ const NavSide: React.FC<Props> = () => {
           <motion.div
             key="open"
             style={{ translateY: scrollVariable, rotate: "0deg" }}
-            className="w-[50%] absolute z-50 top-4 right-4 bg-gradient-to-bl from-primaryOrange to-primaryBrown p-2 to-20% rounded-md flex flex-col justify-start gap-y-3 items-stretch border-orange-900 border-2"
+            className="mobile:w-[50%] pc:w-[20%] absolute z-50 top-4 right-4 bg-gradient-to-bl from-primaryOrange to-primaryBrown p-2 to-20% rounded-md flex flex-col justify-start gap-y-3 items-stretch border-orange-900 border-2"
             id="NavSide"
             initial={{
               clipPath: "circle(0% at 100% 0%)",
@@ -57,27 +58,45 @@ const NavSide: React.FC<Props> = () => {
               <ChevronLeft
                 width={20}
                 height={20}
-                className="text-primaryBrown300"
+                className="text-primaryBrown300 self-start"
                 onClick={() => setOpen(false)}
               />
-              <span className="text-orange-900 font-bubblegum text-lg text-center">
-                Welcome! Take a tour!
+              <span
+                onDoubleClick={() => {
+                  setAdminOptions((prevState) => !prevState);
+                }}
+                className="hover:cursor-default select-none text-orange-900 font-bubblegum text-lg text-center flex-1"
+              >
+                Welcome!
               </span>
             </div>
             <NavElem
               href="/menu"
-              Icon={
-                <Soup width={30} height={30} />
-              }
+              Icon={<Soup width={30} height={30} />}
               text="Menu"
             />
             <NavElem
               href="/review"
-              Icon={
-                <UserCircle width={30} height={30} />
-              }
+              Icon={<UserCircle width={30} height={30} />}
               text="Reviews"
             />
+            <NavElem
+              href="/"
+              Icon={<Map width={30} height={30} />}
+              text="Location"
+            />
+            <NavElem
+              href="/"
+              Icon={<Users width={30} height={30} />}
+              text="Socials"
+            />
+            {adminOptions && (
+              <NavElem
+                href="/edit"
+                Icon={<FileSignature width={30} height={30} />}
+                text="Edit"
+              />
+            )}
           </motion.div>
         ) : (
           <motion.div

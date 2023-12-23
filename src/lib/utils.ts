@@ -115,3 +115,13 @@ export const imageFileValidator = (value: any) => {
 
   return false;
 };
+
+export const personNamer = (name: string | undefined) => {
+  if (name === undefined || name.trim().length === 0){
+    return "Anonymous";
+  } else if (name.trim() === "Anonymous"){
+    return `"Anonymous"`;
+  } else {
+    return name;
+  }
+}
