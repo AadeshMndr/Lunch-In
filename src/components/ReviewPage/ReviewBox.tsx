@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Star } from "lucide-react";
 import { nanoid } from "nanoid";
@@ -28,21 +29,23 @@ const ReviewBox: React.FC<Props> = () => {
     formState: { errors },
   } = useForm<InputField>();
 
-  const [ mealIds, setMealIds ] = useState<string[]>([]);
+  const [mealIds, setMealIds] = useState<string[]>([]);
 
-  const [ rating, setRating ] = useState<number>(0);
+  const [rating, setRating] = useState<number>(0);
 
-  const { mutate } = useMutation<any, any, Review, Review[]>({
+  const router = useRouter();
+
+  const { mutate, isPending } = useMutation<any, any, Review, Review[]>({
     mutationFn: async (review) => {
       const response = await fetch("/api/review", {
         method: "POST",
         body: JSON.stringify(review),
         headers: {
-          "Content-Type" : "application/json",
-        } 
+          "Content-Type": "application/json",
+        },
       });
 
-      if (!response.ok){
+      if (!response.ok) {
         console.log("Couldn't POST the review to the DB!");
         toast.error("Couldn't add the review!");
         return;
@@ -51,12 +54,14 @@ const ReviewBox: React.FC<Props> = () => {
       toast.success("Review added successfully!");
 
       //go to the reviews page here
+      router.push("/");
+
       return;
-    }
+    },
   });
 
   const submitHandler: SubmitHandler<InputField> = ({ message, name }) => {
-    if (rating === 0){
+    if (rating === 0) {
       setError("root", { message: "Please leave a rating" });
       return;
     }
@@ -64,13 +69,13 @@ const ReviewBox: React.FC<Props> = () => {
     const parsedData = ReviewSchema.safeParse({
       name: personNamer(name),
       message,
-      selectedMeals: mealIds,
+      selectedMealIds: mealIds,
       rating,
       id: nanoid(),
     });
-    
-    if (!parsedData.success){
-      console.log("Unable to send this review! due to Zod validation error!");
+
+    if (!parsedData.success) {
+      console.log("Unable to send this review! Due to Zod validation error!");
       return;
     }
 
@@ -105,15 +110,52 @@ const ReviewBox: React.FC<Props> = () => {
           })}
         />
         {errors.message && <ErronousP message={errors.message.message} />}
-        <span className="text-xl font-bold self-start">What dish would you recommend others?</span>
+        <span className="text-xl font-bold self-start">
+          What dish would you recommend others?
+        </span>
         <MealSelection mealIds={mealIds} setMealIds={setMealIds} />
         <span className="text-xl font-bold">Leave an overall rating</span>
         <div className="flex flex-row justify-evenly items-center gap-x-4">
-          <Star width={30} height={30} fill={rating > 0 ? "#edb305" : "transparent"} onClick={() => setRating((prevState) => prevState === 1 ? prevState - 1 : 1)}/>
-          <Star width={30} height={30} fill={rating > 1 ? "#edb305" : "transparent"} onClick={() => setRating((prevState) => prevState === 2 ? prevState - 1 : 2)}/>
-          <Star width={30} height={30} fill={rating > 2 ? "#edb305" : "transparent"} onClick={() => setRating((prevState) => prevState === 3 ? prevState - 1 : 3)}/>
-          <Star width={30} height={30} fill={rating > 3 ? "#edb305" : "transparent"} onClick={() => setRating((prevState) => prevState === 4 ? prevState - 1 : 4)}/>
-          <Star width={30} height={30} fill={rating > 4 ? "#edb305" : "transparent"} onClick={() => setRating((prevState) => prevState === 5 ? prevState - 1 : 5)}/>
+          <Star
+            width={30}
+            height={30}
+            fill={rating > 0 ? "#edb305" : "transparent"}
+            onClick={() =>
+              setRating((prevState) => (prevState === 1 ? prevState - 1 : 1))
+            }
+          />
+          <Star
+            width={30}
+            height={30}
+            fill={rating > 1 ? "#edb305" : "transparent"}
+            onClick={() =>
+              setRating((prevState) => (prevState === 2 ? prevState - 1 : 2))
+            }
+          />
+          <Star
+            width={30}
+            height={30}
+            fill={rating > 2 ? "#edb305" : "transparent"}
+            onClick={() =>
+              setRating((prevState) => (prevState === 3 ? prevState - 1 : 3))
+            }
+          />
+          <Star
+            width={30}
+            height={30}
+            fill={rating > 3 ? "#edb305" : "transparent"}
+            onClick={() =>
+              setRating((prevState) => (prevState === 4 ? prevState - 1 : 4))
+            }
+          />
+          <Star
+            width={30}
+            height={30}
+            fill={rating > 4 ? "#edb305" : "transparent"}
+            onClick={() =>
+              setRating((prevState) => (prevState === 5 ? prevState - 1 : 5))
+            }
+          />
         </div>
         {errors.root && <ErronousP message={errors.root.message} />}
         <Button
@@ -121,6 +163,8 @@ const ReviewBox: React.FC<Props> = () => {
           size={"medium"}
           colorScheme={"inversePrimaryOrange"}
           className="max-w-fit self-end"
+          isLoading={isPending}
+          disabled={isPending}
         >
           Submit
         </Button>

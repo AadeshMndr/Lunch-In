@@ -9,7 +9,7 @@ interface Props {
 }
 
 const MealBox: React.FC<Props> = ({ meal: { image, name, id }, toggleMeal, highlight }) => {
-  const style = `${highlight ? "ring-4" : ""} pc:min-w-[85px] mobile:min-w-[90px] mobile:max-w-[130px] pc:max-w-[110px] rounded-md flex flex-col justify-center items-center bg-primaryBrown p-0.5 hover:ring-2 ring-orange-900 pc:hover:scale-105`;
+  const style = `${highlight ? "ring-4" : ""} pc:min-w-[85px] mobile:min-w-[90px] mobile:max-w-[130px] pc:max-w-[110px] rounded-md flex flex-col justify-center items-center bg-primaryBrown p-0.5 pc:hover:ring-2 ring-orange-900 pc:hover:scale-105`;
 
   return (
     <div onClick={() => toggleMeal(id)} className={style}>

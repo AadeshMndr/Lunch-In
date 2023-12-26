@@ -42,16 +42,14 @@ export default function Home() {
     [-400, width > 500 ? 320 : 270]
   );
 
-  const topShadeWidth = useTransform(scrollY, [0, 200], [0, width > 500 ? 1 : 1.3]);
-
   const opacityValue = useTransform(scrollY, [0, 100, 200], [1, 1, 0]);
 
   return (
     <div className="bg-gradient-to-b from-primaryBrown to-[#af6e3f] from-50%">
       <NavSide />
       <motion.div
-        style={{ translateY: topShadeVariable, rotate: "180deg", scaleX: topShadeWidth }}
-        className="custom-shape-divider-top-1703073171 z-20"
+        style={{ translateY: topShadeVariable, rotate: "180deg" }}
+        className="custom-shape-divider-top-1703073171 z-20 relative"
       >
         <svg
           data-name="Layer 1"
@@ -67,8 +65,8 @@ export default function Home() {
       </motion.div>
       <motion.section
         id="background-image"
-        className="w-full block mobile:h-[60vh] pc:h-[70vh] overflow-hidden"
-        style={{ translateY: reverseScrollVariable, z: 10 }}
+        className="w-full block mobile:h-[60vh] pc:h-[70vh] overflow-hidden relative z-10"
+        style={{ translateY: reverseScrollVariable }}
       >
         <Image
           priority={true}
@@ -80,7 +78,7 @@ export default function Home() {
       </motion.section>
       <motion.section
         style={{ translateY: scrollVariable }}
-        className="z-10 custom-shape-divider-bottom-1703067560"
+        className="relative z-20 custom-shape-divider-bottom-1703067560"
       >
         <svg
           data-name="Layer 1"
@@ -94,10 +92,10 @@ export default function Home() {
           ></path>
         </svg>
         <motion.div
-          className="mx-auto mobile:w-full pc:w-3/4 z-40"
-          style={{ translateY: welcomeVariable, z: 40 }}
+          className="mx-auto mobile:w-full pc:w-3/4 z-40 relative"
+          style={{ translateY: welcomeVariable }}
         >
-          <Title size={"large"} spaceScheme={"spaceBelow"} className="z-40 mobile:w-3/4 mx-auto">
+          <Title size={"large"} spaceScheme={"spaceBelow"} className="relative z-40 mobile:w-3/4 mx-auto">
             Welcome to Lunch In !
           </Title>
           <p className="z-40 font-cursive mobile:text-2xl pc:text-3xl text-center">{`"Pickup your tasty meal kerbside or take your time enjoying our service."`}</p>
