@@ -8,4 +8,6 @@ export const ReviewSchema = z.object({
     rating: z.number().min(1),
 });
 
+export const ArrayOfReviewSchema = z.array(ReviewSchema);
+
 export type Review = z.infer<typeof ReviewSchema>;

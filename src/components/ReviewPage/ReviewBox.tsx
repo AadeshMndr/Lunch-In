@@ -147,7 +147,7 @@ const ReviewBox: React.FC<Props> = () => {
             onClick={() =>
               setRating((prevState) => (prevState === 4 ? prevState - 1 : 4))
             }
-          />
+          />oo
           <Star
             width={30}
             height={30}
