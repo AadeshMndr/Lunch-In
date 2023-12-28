@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Star } from "lucide-react";
@@ -13,19 +13,23 @@ import ErronousP from "../UI/ErronousP";
 import Button from "../UI/Button";
 import MealSelection from "./MealSelection";
 import { personNamer } from "@/lib/utils";
+import { queryClient } from "@/lib/tanstack";
 
-interface Props {}
+interface Props {
+  setAddReview: Dispatch<SetStateAction<boolean>>;
+}
 
 interface InputField {
   name?: string;
   message: string;
 }
 
-const ReviewBox: React.FC<Props> = () => {
+const ReviewBox: React.FC<Props> = ({ setAddReview }) => {
   const {
     register,
     handleSubmit,
     setError,
+    setFocus,
     formState: { errors },
   } = useForm<InputField>();
 
@@ -34,6 +38,14 @@ const ReviewBox: React.FC<Props> = () => {
   const [rating, setRating] = useState<number>(0);
 
   const router = useRouter();
+
+  const closeModal = () => {
+    setAddReview(false);
+  }
+
+  useEffect(() => {
+    setFocus("message");
+  }, []);
 
   const { mutate, isPending } = useMutation<any, any, Review, Review[]>({
     mutationFn: async (review) => {
@@ -57,6 +69,21 @@ const ReviewBox: React.FC<Props> = () => {
       router.push("/");
 
       return;
+    },
+    onMutate: async (review) => {
+      await queryClient.cancelQueries({ queryKey: ["reviews"] });
+
+      const cacheData = queryClient.getQueryData<Review[]>(["reviews"]) || [];
+
+      queryClient.setQueryData(["reviews"], [...cacheData, review]);
+
+      return cacheData;
+    },
+    onError: async (error, variables, context) => {
+      queryClient.setQueryData(["reviews"], context);
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["reviews"] });
     },
   });
 
@@ -83,7 +110,8 @@ const ReviewBox: React.FC<Props> = () => {
   };
 
   return (
-    <div className="pc:w-[50%] mobile:w-[95%] rounded-md p-3 mx-auto shadow-lg my-4 text-orange-900 bg-gradient-to-br from-primaryBrown300 to-transparent">
+    <div className="pc:w-[50%] mobile:w-[95%] rounded-md p-3 mx-auto shadow-lg my-4 text-orange-900 bg-gradient-to-br from-[#af6e3f] to-primaryBrown">
+      <button onClick={closeModal}>Back Button</button>
       <form
         onSubmit={handleSubmit(submitHandler)}
         className="flex flex-col justify-around gap-y-4 items-center"
@@ -147,7 +175,7 @@ const ReviewBox: React.FC<Props> = () => {
             onClick={() =>
               setRating((prevState) => (prevState === 4 ? prevState - 1 : 4))
             }
-          />oo
+          />
           <Star
             width={30}
             height={30}
@@ -161,7 +189,7 @@ const ReviewBox: React.FC<Props> = () => {
         <Button
           type="submit"
           size={"medium"}
-          colorScheme={"inversePrimaryOrange"}
+          colorScheme={"primaryOrange"}
           className="max-w-fit self-end"
           isLoading={isPending}
           disabled={isPending}
