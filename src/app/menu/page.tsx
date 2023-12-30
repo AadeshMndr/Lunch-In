@@ -1,8 +1,10 @@
+import { Soup } from "lucide-react";
+
 import Menu from "@/components/MenuPage/Menu";
 import MealShowCase from "@/components/MenuPage/MealShowCase";
 import { executeInDB } from "@/lib/db";
 import { Meal, ArrayOfMealsSchema } from "@/models/Meal";
-import { Soup } from "lucide-react";
+import BackButton from "@/components/UI/BackButton";
 
 interface PageProps {
   params: {};
@@ -12,6 +14,7 @@ interface PageProps {
 export const dynamic = "force-dynamic";
 
 const MenuPage = async ({}: PageProps) => {
+
   const data = await executeInDB<Meal[]>(async (db) => {
     const collection = db.collection("meals");
 
@@ -48,6 +51,7 @@ const MenuPage = async ({}: PageProps) => {
     </div>
   ) : (
     <div>
+      <BackButton />
       <MealShowCase meals={mealData} />
       <section>
         <Menu backupData={mealData} />

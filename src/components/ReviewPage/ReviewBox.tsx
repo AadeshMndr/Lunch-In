@@ -3,7 +3,7 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Star } from "lucide-react";
+import { Star, ArrowLeft } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -41,7 +41,7 @@ const ReviewBox: React.FC<Props> = ({ setAddReview }) => {
 
   const closeModal = () => {
     setAddReview(false);
-  }
+  };
 
   useEffect(() => {
     setFocus("message");
@@ -111,7 +111,10 @@ const ReviewBox: React.FC<Props> = ({ setAddReview }) => {
 
   return (
     <div className="pc:w-[50%] mobile:w-[95%] rounded-md p-3 mx-auto shadow-lg my-4 text-orange-900 bg-gradient-to-br from-[#af6e3f] to-primaryBrown">
-      <button onClick={closeModal}>Back Button</button>
+      <div className="flex flex-row items-center gap-x-2 mb-3" onClick={closeModal}>
+        <ArrowLeft width={18} height={18} />
+        <span>Go Back</span>
+      </div>
       <form
         onSubmit={handleSubmit(submitHandler)}
         className="flex flex-col justify-around gap-y-4 items-center"

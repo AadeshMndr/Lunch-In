@@ -6,16 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import ReviewBox from "@/components/ReviewPage/ReviewBox";
 import Title from "@/components/UI/Title";
 import ReviewList from "@/components/ReviewPage/ReviewList";
+import BackButton from "@/components/UI/BackButton";
 
 const ReviewPage = () => {
   const [addReview, setAddReview] = useState<boolean>(false);
 
-  //add a proper back button everywhere.
-
-  //add a better loading text when the reviews are loading.
-
   return (
     <div className="w-full p-3 min-h-screen">
+      <BackButton />
       <Title size={"large"} colorScheme={"primary"} spaceScheme={"spaceBelow"}>
         Reviews
       </Title>
@@ -32,7 +30,8 @@ const ReviewPage = () => {
             exit={{ y: 200, opacity: 0 }}
             transition={{ type: "spring" }}
             id="backdropForReview"
-            className="absolute top-0 left-0 w-full bg-gradient-to-br from-primaryBrown to-primaryOrange"
+            onClick={() => setAddReview(false)}
+            className="z-50 absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primaryBrown to-primaryOrange"
           >
             <ReviewBox setAddReview={setAddReview} />
           </motion.div>

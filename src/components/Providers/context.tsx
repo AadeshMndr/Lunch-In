@@ -9,6 +9,8 @@ interface Context {
   setOpen: Dispatch<SetStateAction<boolean>>;
   selectedMeal: string | null;
   setSelectedMeal: Dispatch<SetStateAction<string | null>>;
+  hoveredMealId: string | null;
+  setHoveredMealId: Dispatch<SetStateAction<string | null>>;
 }
 
 export const AppContext = createContext<Context>({
@@ -18,6 +20,8 @@ export const AppContext = createContext<Context>({
   setOpen: () => {},
   selectedMeal: null,
   setSelectedMeal: () => {},
+  hoveredMealId: null,
+  setHoveredMealId: () => {},
 });
 
 interface Props {
@@ -28,6 +32,7 @@ const ContextProvider: React.FC<Props> = ({ children }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [ selectedMeal, setSelectedMeal ] = useState<string | null>(null);
+  const [ hoveredMealId, setHoveredMealId ] = useState<string | null>(null);
 
   const contextObj: Context = {
     cardShown,
@@ -35,7 +40,9 @@ const ContextProvider: React.FC<Props> = ({ children }) => {
     open,
     setOpen,
     selectedMeal,
-    setSelectedMeal
+    setSelectedMeal,
+    hoveredMealId,
+    setHoveredMealId
   };
 
   const closeThings: MouseEventHandler<HTMLDivElement> = (event) => {

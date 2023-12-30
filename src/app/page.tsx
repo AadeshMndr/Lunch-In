@@ -8,6 +8,7 @@ import TitleCard from "@/components/Homepage/TitleCard";
 import Title from "@/components/UI/Title";
 import MealSlider from "@/components/Homepage/MealSection/MealSlider";
 import NavSide from "@/components/NavSide/NavSide";
+import GoogleMaps from "@/components/UI/Map";
 
 import BackgroundImage from "@/assets/LunchInPoster.png";
 
@@ -115,7 +116,7 @@ export default function Home() {
         <Title size={"large"} spaceScheme={"spaceBelow"}>
           Come visit Us
         </Title>
-        <p className="text-center">The map will be here!</p>
+        {/* <GoogleMaps /> */}
       </section>
       <section className="block mt-36">
         <Title size={"large"} spaceScheme={"spaceBelow"}>
