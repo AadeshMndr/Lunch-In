@@ -30,7 +30,13 @@ const ReviewPage = () => {
             exit={{ y: 200, opacity: 0 }}
             transition={{ type: "spring" }}
             id="backdropForReview"
-            onClick={() => setAddReview(false)}
+            onClick={(event) => {
+              if ("id" in event.target) {
+                if (event.target.id === "backdropForReview") {
+                  setAddReview(false);
+                }
+              }
+            }}
             className="z-50 absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primaryBrown to-primaryOrange"
           >
             <ReviewBox setAddReview={setAddReview} />

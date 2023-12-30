@@ -20,6 +20,8 @@ const GoogleMaps:React.FC<Props> = () => {
 
             const { Map } = await  loader.importLibrary("maps");
 
+            const { Marker } = await loader.importLibrary("marker");
+
             const position = {
                 lat: 27.698916653445256, 
                 lng: 85.31014236171056
@@ -27,8 +29,13 @@ const GoogleMaps:React.FC<Props> = () => {
 
             const map = new Map(mapRef.current!, {
                 center: position,
-                zoom: 17,
-                mapId: "super secret ID",
+                zoom: 18,
+                mapId: "c60f46a662925ce1",
+            });
+
+            const marker = new Marker({
+                map,
+                position,
             });
         }
 
@@ -36,7 +43,7 @@ const GoogleMaps:React.FC<Props> = () => {
 
     }, []);
 
-    return <div ref={mapRef} className="h-80" />
+    return <div ref={mapRef} className="h-96 w-[90%] mx-auto rounded-lg" />
 }
 
 export default GoogleMaps;

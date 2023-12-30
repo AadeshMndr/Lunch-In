@@ -116,9 +116,9 @@ export default function Home() {
         <Title size={"large"} spaceScheme={"spaceBelow"}>
           Come visit Us
         </Title>
-        {/* <GoogleMaps /> */}
+        <GoogleMaps />
       </section>
-      <section className="block mt-36">
+      <section className="block mt-9">
         <Title size={"large"} spaceScheme={"spaceBelow"}>
           Social Media and Contacts
         </Title>
