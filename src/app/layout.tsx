@@ -74,6 +74,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className="w-screen h-full relative bg-no-repeat bg-gradient-to-b from-primaryBrown from-[20%] to-[#af6e3f]">
         <AuthProvider>
+        <SpeedInsights/>
           <ContextProvider>
             <QueryProvider>
               <HydrationBoundary state={dehydratedState}>
