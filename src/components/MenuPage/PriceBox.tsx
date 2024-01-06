@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
+import { nanoid } from "nanoid";
 
 import AmountIcons from "../UI/AmountIcons";
 import { stringify, destringify } from "@/lib/utils";
@@ -20,6 +21,8 @@ interface Props {
 const PriceBox: React.FC<Props> = ({ price }) => {
   const priceKeys = useMemo(() => getPriceKeys(price), [price]);
 
+  const uniqueID = useMemo(() => nanoid(), []);
+
   const [quantity, setQuantity] = useState<"full" | "half">("full");
   const [selectivePrice, setSelectivePrice] = useState<QuantitativePrice>(
     typeof price === "number" || "half" in price
@@ -33,7 +36,7 @@ const PriceBox: React.FC<Props> = ({ price }) => {
 
   if (typeof price === "number") {
     return (
-      <div className="text-primaryOrange font-semibold max-w-[70px]" key={price}>
+      <div className="text-primaryOrange font-semibold max-w-[70px]" key={`numberOnly-${uniqueID}-price`}>
         Rs. {price}
       </div>
     );
@@ -50,7 +53,7 @@ const PriceBox: React.FC<Props> = ({ price }) => {
     typeof selectivePrice === "object"
   ) {
     return (
-      <div key={Math.random()} className="flex justify-normal items-center text-primaryOrange font-semibold text-center mx-2" >
+      <div key={`half-full-${uniqueID}`} className="flex justify-normal items-center text-primaryOrange font-semibold text-center mx-2" >
         {typeof selectivePrice === "object" && (
           <AmountIcons quantity={quantity} toggleQuantity={toggleQuantity} />
         )}
@@ -69,10 +72,10 @@ const PriceBox: React.FC<Props> = ({ price }) => {
     typeof selectivePrice === "number"
   ) {
     return (
-      <div className="max-w-[70px] text-primaryOrange font-semibold text-center mx-2">
+      <div key={`multiple-keys-${uniqueID}`} className="max-w-[70px] text-primaryOrange font-semibold text-center mx-2">
         <motion.select
           whileHover={{ scale: 1.03 }}
-          id="priceBox"
+          // id="priceBox"
           onChange={(event) => setSelectivePrice(Number(event.target.value))}
           className="max-w-fit focus:outline-none bg-primaryOrange text-primaryBrown rounded-md"
         >
@@ -94,7 +97,7 @@ const PriceBox: React.FC<Props> = ({ price }) => {
   }
 
   return (
-    <div className="flex justify-normal items-center text-primaryOrange font-semibold text-center mx-2" key={Math.random()}>
+    <div className="flex justify-normal items-center text-primaryOrange font-semibold text-center mx-2" key={`final-div-${uniqueID}`}>
       {typeof selectivePrice === "object" && (
         <AmountIcons quantity={quantity} toggleQuantity={toggleQuantity} />
       )}
@@ -102,6 +105,7 @@ const PriceBox: React.FC<Props> = ({ price }) => {
       <div>
         <motion.select
           whileHover={{ scale: 1.03 }}
+          key={`final-select-${uniqueID}`}
           onChange={(event) => {
             const value = event.target.value;
 
@@ -147,7 +151,7 @@ const PriceBox: React.FC<Props> = ({ price }) => {
             );
           })}
         </motion.select>
-        <div className="text-primaryOrange font-semibold" key={Math.random()}>
+        <div className="text-primaryOrange font-semibold" key={`price-final-${uniqueID}`}>
           Rs.{" "}
           {typeof selectivePrice === "number"
             ? selectivePrice

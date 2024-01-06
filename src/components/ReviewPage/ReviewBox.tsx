@@ -45,7 +45,7 @@ const ReviewBox: React.FC<Props> = ({ setAddReview }) => {
 
   useEffect(() => {
     setFocus("message");
-  }, []);
+  }, [setFocus]);
 
   const { mutate, isPending } = useMutation<any, any, Review, Review[]>({
     mutationFn: async (review) => {

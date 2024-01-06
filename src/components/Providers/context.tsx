@@ -11,6 +11,8 @@ interface Context {
   setSelectedMeal: Dispatch<SetStateAction<string | null>>;
   hoveredMealId: string | null;
   setHoveredMealId: Dispatch<SetStateAction<string | null>>;
+  deleteModalIsOpen: boolean;
+  setDeleteModalIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export const AppContext = createContext<Context>({
@@ -22,6 +24,8 @@ export const AppContext = createContext<Context>({
   setSelectedMeal: () => {},
   hoveredMealId: null,
   setHoveredMealId: () => {},
+  deleteModalIsOpen: false,
+  setDeleteModalIsOpen: () => {},
 });
 
 interface Props {
@@ -33,6 +37,7 @@ const ContextProvider: React.FC<Props> = ({ children }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [ selectedMeal, setSelectedMeal ] = useState<string | null>(null);
   const [ hoveredMealId, setHoveredMealId ] = useState<string | null>(null);
+  const [ deleteModalIsOpen, setDeleteModalIsOpen ] = useState<boolean>(false);
 
   const contextObj: Context = {
     cardShown,
@@ -42,7 +47,9 @@ const ContextProvider: React.FC<Props> = ({ children }) => {
     selectedMeal,
     setSelectedMeal,
     hoveredMealId,
-    setHoveredMealId
+    setHoveredMealId,
+    deleteModalIsOpen,
+    setDeleteModalIsOpen,
   };
 
   const closeThings: MouseEventHandler<HTMLDivElement> = (event) => {

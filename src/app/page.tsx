@@ -9,10 +9,11 @@ import Title from "@/components/UI/Title";
 import MealSlider from "@/components/Homepage/MealSection/MealSlider";
 import NavSide from "@/components/NavSide/NavSide";
 import GoogleMaps from "@/components/UI/Map";
+import Media from "@/components/Homepage/Media";
+import OpeningTime from "@/components/Homepage/OpeningTime";
 
 import BackgroundImage from "@/assets/LunchInPoster.png";
 
-//Right now the NavSide doesn't close once open, and also the menuSlider doesn'e close when clicked outside so maybe make a useContext to handle both of them. For this just use a context wrapper or make the context in the main home page because we are going to make the home page a client component/page anyway later when we use framer motion, thus make both the mealSlider view and the NavSide close when clicked outside.
 
 export default function Home() {
   const { scrollY } = useScroll();
@@ -112,17 +113,18 @@ export default function Home() {
         </Title>
         <MealSlider />
       </section>
-      <section className="block mt-9">
+      <section className="block pc:mt-16 mobile:-translate-y-24" id="location">
         <Title size={"large"} spaceScheme={"spaceBelow"}>
           Come visit Us
         </Title>
         <GoogleMaps />
       </section>
-      <section className="block mt-9">
+      <section className="block pc:mt-16 pc:pt-6 mobile:-translate-y-10 mb-4" id="socials">
         <Title size={"large"} spaceScheme={"spaceBelow"}>
-          Social Media and Contacts
+          Contact Us
         </Title>
-        <p className="text-center">The social media links will go here!</p>
+        <OpeningTime />
+        <Media />
       </section>
     </div>
   );

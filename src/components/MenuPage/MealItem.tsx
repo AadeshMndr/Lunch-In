@@ -23,8 +23,8 @@ const MealItem: React.FC<Props> = ({ meal: { image, name, price, id } }) => {
     if ("id" in event.target){
 
       if(event.target.id === "clickable"){
-        // router.push(`/menu?mealId=${id}`);
         setSelectedMeal(id);
+        router.push("/menu");
       }
     }
 
@@ -46,7 +46,7 @@ const MealItem: React.FC<Props> = ({ meal: { image, name, price, id } }) => {
         </div>
       </div>
       <div id="clickable" className="flex justify-center items-center font-semibold text-lg font-cursive self-stretch">{name}</div>
-      <PriceBox price={price}/>
+      <PriceBox price={price} key={`pricebox--${id}`}/>
     </motion.div>
   );
 };

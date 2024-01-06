@@ -2,9 +2,10 @@ import { NextAuthOptions, getServerSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { redirect } from "next/navigation";
 
+
 const adminCredentials = {
-    username: "admin",
-    password: "admin",
+    username: process.env.NEXT_USERNAME as string,
+    password: process.env.NEXT_PASSWORD as string,
 }
 
 export const options: NextAuthOptions = {

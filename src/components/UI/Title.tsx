@@ -3,7 +3,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
 import { clsx } from "clsx";
 
-const titleVariance = cva("font-bold font-bubblegum text-center drop-shadow-sm", {
+const titleVariance = cva("font-bold font-bubblegum text-center drop-shadow-sm cursor-default", {
   variants: {
     size: {
       default: "",

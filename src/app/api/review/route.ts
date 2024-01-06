@@ -5,56 +5,87 @@ import { executeInDB } from "@/lib/db";
 import { ReviewSchema, ArrayOfReviewSchema } from "@/models/Review";
 
 export const GET = async () => {
-    try {
-        const data = await executeInDB(async (db) => {
-            const collection = db.collection("reviews");
+  try {
+    const data = await executeInDB(async (db) => {
+      const collection = db.collection("reviews");
 
-            const data = (await (await collection.find()).toArray());
+      const data = await (await collection.find()).toArray();
 
-            const correctedData = data.map( (item) => {
-                let correctedItem:any = item;
+      const correctedData = data.map((item) => {
+        let correctedItem: any = item;
 
-                delete correctedItem["_id"];
+        delete correctedItem["_id"];
 
-                return correctedItem;
-            });
+        return correctedItem;
+      });
 
-            const parsedData = ArrayOfReviewSchema.parse(correctedData);
+      const parsedData = ArrayOfReviewSchema.parse(correctedData);
 
-            return parsedData;
-        });
+      return parsedData;
+    });
 
-        return new NextResponse(JSON.stringify(data));
-    } catch(error){
-        if (error instanceof ZodError){
-            return new NextResponse("The DB is providing ZOD invalid data!", { status: 402 });
-        }
-
-        return new NextResponse("Some error occured while fetching the reviews!", { status: 400 })
+    return new NextResponse(JSON.stringify(data));
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return new NextResponse("The DB is providing ZOD invalid data!", {
+        status: 402,
+      });
     }
-}
+
+    return new NextResponse("Some error occured while fetching the reviews!", {
+      status: 400,
+    });
+  }
+};
 
 export const POST = async (req: NextRequest) => {
-    const body = await req.json();
-    
-    try {   
+  const body = await req.json();
 
-        const parsedBody = ReviewSchema.parse(body);
+  try {
+    const parsedBody = ReviewSchema.parse(body);
 
-        await executeInDB(async (db) => {
-            const collection = db.collection("reviews");
+    await executeInDB(async (db) => {
+      const collection = db.collection("reviews");
 
-            await collection.insertOne(parsedBody);
-        });
+      await collection.insertOne(parsedBody);
+    });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return new NextResponse(
+        "Please Don't use post man to send request to this API",
+        { status: 401 }
+      );
+    } else {
+      return new NextResponse("Some error occured!", { status: 400 });
+    }
+  }
 
-    } catch (error) {
+  return new NextResponse("OK");
+};
 
-        if(error instanceof ZodError){
-            return new NextResponse("Please Don't use post man to send request to this API", { status: 401 });
-        } else {
-            return new NextResponse("Some error occured!", { status: 400 });
-        }
+export const DELETE = async (req: NextRequest) => {
+  const body = await req.json();
+
+  if ("id" in body) {
+    if (typeof body.id !== "string") {
+      return new NextResponse("Invalid Body for DELETE method", {
+        status: 401,
+      });
     }
 
-    return new NextResponse("OK");
-}
+    const deletionId = body.id;
+
+    try {
+      await executeInDB(async (db) => {
+        const collection = db.collection("reviews");
+
+        await collection.deleteOne({ id: deletionId });
+      });
+      return new NextResponse("Deleted the review data");
+    } catch (error) {
+      return new NextResponse("Couldn't make the DB delete the review data!");
+    }
+  } else {
+    return new NextResponse("Invalid Body for DELETE method", { status: 401 });
+  }
+};

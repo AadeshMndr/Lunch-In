@@ -8,6 +8,16 @@ export const ReviewSchema = z.object({
     rating: z.number().min(1),
 });
 
+export const RecommendationSchema = z.object({
+    name: z.string(),
+    image: z.string(),
+    id: z.string(),
+    count: z.number(),
+    reviewers: z.array(z.string())
+});
+
 export const ArrayOfReviewSchema = z.array(ReviewSchema);
 
 export type Review = z.infer<typeof ReviewSchema>;
+
+export type Recommendation = z.infer<typeof RecommendationSchema>;

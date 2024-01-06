@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search, Trash } from "lucide-react";
 import { toast } from "sonner";
@@ -12,6 +12,8 @@ import MealItem from "./MealItem";
 import DeleteItem from "./DeleteItem";
 import useSearch from "@/hooks/search";
 import Title from "../UI/Title";
+import DeletionLayer from "../UI/DeletionLayer";
+import { AppContext } from "../Providers/context";
 
 interface Props {
   mode: "edit" | "delete";
@@ -19,6 +21,8 @@ interface Props {
 
 const AvailableMeals: React.FC<Props> = ({ mode }) => {
   const [selectedForDeletion, setSelectedForDeletion] = useState<string[]>([]);
+
+  const { deleteModalIsOpen, setDeleteModalIsOpen } = useContext(AppContext);
 
   const { data } = useQuery<Meal[]>({
     queryKey: ["meals"],
@@ -95,7 +99,10 @@ const AvailableMeals: React.FC<Props> = ({ mode }) => {
 
       const cacheData = queryClient.getQueryData<Meal[]>(["meals"]) || [];
 
-      queryClient.setQueryData(["meals"], [...cacheData.filter( (meal) => !ids.includes(meal.id))]);
+      queryClient.setQueryData(
+        ["meals"],
+        [...cacheData.filter((meal) => !ids.includes(meal.id))]
+      );
 
       return cacheData;
     },
@@ -104,12 +111,30 @@ const AvailableMeals: React.FC<Props> = ({ mode }) => {
       return;
     },
     onSettled: async () => {
+      setSelectedForDeletion([]);
       await queryClient.invalidateQueries({ queryKey: ["meals"] });
-    }
+    },
   });
+
+  const confirmDeletion = () => {
+    mutate(selectedForDeletion);
+    setDeleteModalIsOpen(false);
+  };
+
+  const cancelDeletion = () => {
+    setSelectedForDeletion([]);
+    setDeleteModalIsOpen(false);
+  };
 
   return (
     <>
+      <DeletionLayer
+        data={data}
+        selectedForDeletion={selectedForDeletion}
+        deleteModalIsOpen={deleteModalIsOpen}
+        onCancel={cancelDeletion}
+        onDelete={confirmDeletion}
+      />
       {mode === "delete" && (
         <div className="flex flex-row justify-evenly items-center">
           <Title
@@ -124,7 +149,11 @@ const AvailableMeals: React.FC<Props> = ({ mode }) => {
               width={40}
               height={40}
               className="text-red-600 active:scale-95 -translate-y-4"
-              onClick={() => {mutate(selectedForDeletion)}}
+              onClick={() => {
+                setDeleteModalIsOpen(true);
+
+                // mutate(selectedForDeletion);
+              }}
             />
           )}
         </div>
@@ -151,6 +180,7 @@ const AvailableMeals: React.FC<Props> = ({ mode }) => {
                 <DeleteItem
                   meal={meal}
                   key={meal.id}
+                  markedForDeletion={selectedForDeletion}
                   markForDeletion={markForDeletion}
                 />
               )

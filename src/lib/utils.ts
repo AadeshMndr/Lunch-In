@@ -117,11 +117,39 @@ export const imageFileValidator = (value: any) => {
 };
 
 export const personNamer = (name: string | undefined) => {
-  if (name === undefined || name.trim().length === 0){
+  if (name === undefined || name.trim().length === 0) {
     return "Anonymous";
-  } else if (name.trim() === "Anonymous"){
+  } else if (name.trim() === "Anonymous") {
     return `"Anonymous"`;
   } else {
     return name;
   }
-}
+};
+
+export const isWithinOpeningHours = () => {
+  const timeZone = "Asia/Kathmandu";
+
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    hour12: false, // Use 24-hour format
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  });
+
+  const currentDateInTimeZone = formatter.format(new Date());
+
+  const currentDate = new Date(currentDateInTimeZone);
+
+  if (currentDate.getDay() === 6) {
+    return false;
+  } else {
+    return (
+      (currentDate.getHours() === 19 && currentDate.getMinutes() <= 30) ||
+      (currentDate.getHours() < 19 && currentDate.getHours() > 6)
+    );
+  }
+};

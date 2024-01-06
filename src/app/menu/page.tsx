@@ -5,6 +5,7 @@ import MealShowCase from "@/components/MenuPage/MealShowCase";
 import { executeInDB } from "@/lib/db";
 import { Meal, ArrayOfMealsSchema } from "@/models/Meal";
 import BackButton from "@/components/UI/BackButton";
+import Recommendations from "@/components/MenuPage/Recommendations";
 
 interface PageProps {
   params: {};
@@ -57,7 +58,8 @@ const MenuPage = async ({}: PageProps) => {
         <Menu backupData={mealData} />
       </section>
       <section>
-        Having trouble deciding your meal, take a look at some recommendations.
+        <div className="text-xl text-center font-cursive mt-4 mb-8">Having trouble deciding your meal, take a look at some recommendations.</div>
+        <Recommendations backupData={mealData} />
       </section>
     </div>
   );

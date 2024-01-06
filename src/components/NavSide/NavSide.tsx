@@ -81,12 +81,12 @@ const NavSide: React.FC<Props> = () => {
               text="Reviews"
             />
             <NavElem
-              href="/"
+              href="/#location"
               Icon={<Map width={30} height={30} />}
               text="Location"
             />
             <NavElem
-              href="/"
+              href="/#socials"
               Icon={<Users width={30} height={30} />}
               text="Socials"
             />
