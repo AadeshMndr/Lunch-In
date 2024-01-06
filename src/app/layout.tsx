@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import AuthProvider from "@/components/Providers/auth";
 import ToastProvider from "@/components/Providers/toast";
