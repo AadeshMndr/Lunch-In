@@ -18,10 +18,10 @@ export const metadata: Metadata = {
     Welcome to Lunch In, We serve you the best meals around Kathmandu. 
     Pickup your tasty meal kerbside or take your time enjoying our service.`,
     keywords: ["Lunch", "LunchIn", "restaurant"],
-    metadataBase: new URL('http://lunchin.vercel.app'),
+    metadataBase: new URL('https://lunch-in.vercel.app/'),
   openGraph: {
     type: "website",
-    url: "http://lunchin.vercel.app",
+    url: "https://lunch-in.vercel.app/",
     title: "Lunch In",
     description: `Looking for a place to have your lunch? 
     Welcome to Lunch In, We serve you the best meals around Kathmandu. 
